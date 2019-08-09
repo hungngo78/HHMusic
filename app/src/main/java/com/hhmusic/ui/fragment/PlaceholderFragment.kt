@@ -1,4 +1,4 @@
-package com.hhmusic.ui.activity.ui.main
+package com.hhmusic.ui.fragment
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.hhmusic.R
+import com.hhmusic.viewmodels.PageViewModel
 
 /**
  * A placeholder fragment containing a simple view.

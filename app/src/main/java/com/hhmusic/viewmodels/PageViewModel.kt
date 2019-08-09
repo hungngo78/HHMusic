@@ -1,4 +1,4 @@
-package com.hhmusic.ui.activity.ui.main
+package com.hhmusic.viewmodels
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
