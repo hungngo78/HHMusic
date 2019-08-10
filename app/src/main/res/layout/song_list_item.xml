@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable name="isLoading"
+                  type="boolean"/>
+        <variable name="songItem"
+                  type="com.hhmusic.data.entities.Song"/>
+        <variable
+                name="clickListener"
+                type="android.view.View.OnClickListener"/>
+    </data>
+    <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:onClick="@{clickListener}">
+    >
+        <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:maxLines="2"
+                android:id="@+id/title"
+                android:text="@{songItem.title}"
+                android:contentDescription="title of song"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toEndOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                style="@style/TitleItemList"
+        />
+        <TextView android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  android:id="@+id/artist"
+                  android:maxLines="1"
+                  android:text="@{songItem.artistName}"
+                  app:layout_constraintTop_toBottomOf="@+id/title"
+                  app:layout_constraintStart_toStartOf="parent"
+                  app:layout_constraintEnd_toEndOf="parent"
+                  android:contentDescription="artist name"
+                  style="@style/ContentItemList"
+
+                    />
+        <TextView android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  android:id="@+id/duration"
+                  android:maxLines="1"
+                  android:text="@{`` + songItem.durationFormat}"
+                  app:layout_constraintTop_toBottomOf="@+id/artist"
+                  app:layout_constraintStart_toStartOf="parent"
+                  app:layout_constraintEnd_toEndOf="parent"
+                  android:contentDescription="artist name"
+
+        />
+        <View android:layout_width="match_parent" android:layout_height="0.3dp"
+              app:layout_constraintStart_toStartOf="parent"
+              app:layout_constraintTop_toBottomOf="@+id/duration"
+              app:layout_constraintEnd_toEndOf="parent"
+              android:layout_marginTop="8dp"
+              android:background="@color/colorPrimaryDark"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
+</layout>

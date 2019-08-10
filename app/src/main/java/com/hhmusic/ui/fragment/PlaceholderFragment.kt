@@ -25,6 +25,7 @@ class PlaceholderFragment : Fragment() {
         }
     }
 
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -34,6 +35,15 @@ class PlaceholderFragment : Fragment() {
         pageViewModel.text.observe(this, Observer<String> {
             textView.text = it
         })
+
+//        // getSong list from device
+//        pageViewModel.getSongList()
+//
+//        pageViewModel.getObserverSongList().observe(this, Observer { list -> {
+//
+//            // set this list to adapter and display on listview
+//
+//        } })
         return root
     }
 
@@ -42,7 +52,7 @@ class PlaceholderFragment : Fragment() {
          * The fragment argument representing the section number for this
          * fragment.
          */
-        private const val ARG_SECTION_NUMBER = "section_number"
+        const val ARG_SECTION_NUMBER = "section_number"
 
         /**
          * Returns a new instance of this fragment for the given section

@@ -1,9 +1,9 @@
 package com.hhmusic.ui.activity
 
+import android.Manifest
+import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
-import android.text.Layout
-import com.google.android.material.floatingactionbutton.FloatingActionButton
-import com.google.android.material.snackbar.Snackbar
 import androidx.core.view.GravityCompat
 import androidx.appcompat.app.ActionBarDrawerToggle
 import android.view.MenuItem
@@ -12,11 +12,14 @@ import com.google.android.material.navigation.NavigationView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import android.view.Menu
-import android.view.View
+import android.widget.Toast
 import androidx.viewpager.widget.ViewPager
 import com.google.android.material.tabs.TabLayout
 import com.hhmusic.R
 import com.hhmusic.ui.activity.ui.main.SectionsPagerAdapter
+
+import androidx.appcompat.app.AlertDialog
+
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
@@ -39,14 +42,88 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         toggle.syncState()
 
         navView.setNavigationItemSelectedListener(this)
-        initTabLayout()
+
+        checkPermission()
     }
+
+    val MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 123
+
+    fun checkPermission() {
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+
+            val hasWritePermission: Int = checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE);
+            val hasReadPermission = checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE);
+
+            var permissions: MutableList<String> = ArrayList<String>();
+            if (hasWritePermission != PackageManager.PERMISSION_GRANTED) {
+                permissions.add(Manifest.permission.WRITE_EXTERNAL_STORAGE);
+            } else {
+//              preferencesUtility.setString("storage", "true");
+            }
+
+            if (hasReadPermission != PackageManager.PERMISSION_GRANTED) {
+                permissions.add(Manifest.permission.READ_EXTERNAL_STORAGE);
+
+            } else {
+//              preferencesUtility.setString("storage", "true");
+            }
+
+            if (!permissions.isEmpty()) {
+              //requestPermissions(permissions.toArray(new String[permissions.size()]), REQUEST_CODE_SOME_FEATURES_PERMISSIONS);
+                requestPermissions(permissions.toTypedArray(), MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE);
+//                ActivityCompat.requestPermissions(
+//                    this, arrayOf(
+//                        Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_PHONE_STATE
+//                    ),
+//                    MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE
+//                );
+            } else {
+                initTabLayout();
+            }
+        }
+    }
+        // Receive the permissions request result
+      override  fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>,
+                                                grantResults: IntArray) {
+            when (requestCode) {
+                MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE ->{
+                    val isPermissionsGranted = processPermissionsResult(requestCode,permissions,grantResults)
+
+                    if(isPermissionsGranted){
+                        // Do the task now
+                        toast("Permissions granted.")
+                        initTabLayout();
+
+                    }else{
+                        toast("Permissions denied.")
+                    }
+                    return
+                }
+            }
+        }
+    // Process permissions result
+    fun processPermissionsResult(requestCode: Int, permissions: Array<String>,
+                                 grantResults: IntArray): Boolean {
+        var result = 0
+        if (grantResults.isNotEmpty()) {
+            for (item in grantResults) {
+                result += item
+            }
+        }
+        if (result == PackageManager.PERMISSION_GRANTED) return true
+        return false
+    }
+        // Extension function to show toast message
+        fun toast(message: String) {
+            Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+        }
 
     fun initTabLayout(){
         val sectionsPagerAdapter = SectionsPagerAdapter(this, supportFragmentManager)
-        val viewPager: ViewPager = findViewById(R.id.view_pager)
+        val viewPager: ViewPager = findViewById(com.hhmusic.R.id.view_pager)
         viewPager.adapter = sectionsPagerAdapter
-        tabs = findViewById(R.id.tabs)
+        tabs = findViewById(com.hhmusic.R.id.tabs)
         tabs.setupWithViewPager(viewPager)
         setupTabicons()
     }

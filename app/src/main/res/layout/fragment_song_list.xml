@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable name="adapter"
+                  type="com.hhmusic.ui.adapters.SongListAdapter"/>
+        <variable
+                name="clickListener"
+                type="android.view.View.OnClickListener"/>
+    </data>
+
+    <ScrollView android:layout_width="match_parent" android:layout_height="match_parent">
+    <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="@{clickListener}">
+
+    <!--<TextView android:layout_width="match_parent"-->
+              <!--android:layout_height="match_parent"-->
+              <!--android:id="@+id/isLoadingtext"-->
+              <!--android:text="@string/is_loading"-->
+              <!--android:visibility="gone"/>-->
+    <androidx.recyclerview.widget.RecyclerView
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:layout_margin="16dp"
+              android:id="@+id/songListview"
+              app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+              tools:context=".ui.activity.MainActivity"
+              tools:listitem="@layout/song_list_item"
+              app:layout_constraintStart_toStartOf="parent"
+              app:layout_constraintTop_toTopOf="parent"
+              app:layout_constraintEnd_toEndOf="parent"
+    >
+
+    </androidx.recyclerview.widget.RecyclerView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
+    </layout>

@@ -10,12 +10,8 @@ import android.content.ContentUris
 
 
 
-class PageViewModel : ViewModel() {
+class SongViewModel : ViewModel() {
 
-    private val _index = MutableLiveData<Int>()
-    val text: LiveData<String> = Transformations.map(_index) {
-        "Hello world from section: $it"
-    }
 
     val mObserverSongList = MediatorLiveData<List<Song>>()
     val songList : MutableLiveData<List<Song>> =  MutableLiveData<List<Song>>()
@@ -25,10 +21,6 @@ class PageViewModel : ViewModel() {
         mObserverSongList.addSource(songList, mObserverSongList::setValue)
     }
 
-
-    fun setIndex(index: Int) {
-        _index.value = index
-    }
 
     fun getObserverSongList(): LiveData<List<Song>> {
         return mObserverSongList;

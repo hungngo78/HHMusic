@@ -19,4 +19,6 @@
     <string name="tab_text_artist">Artist</string>
     <string name="tab_text_playlist">Playlist</string>
     <string name="tab_text_folder">Folder</string>
+
+    <string name="is_loading">Loading...</string>
 </resources>
