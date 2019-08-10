@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.hhmusic.HHMusicApplication
-import com.hhmusic.data.entities.Song
+import com.hhmusic.data.model.Song
 import com.hhmusic.databinding.SongListItemBinding
 
 class SongListAdapter: ListAdapter<Song, SongListAdapter.SongListViewHolder>(SongDiffCallback()) {
@@ -47,8 +47,6 @@ class SongListAdapter: ListAdapter<Song, SongListAdapter.SongListViewHolder>(Son
                  executePendingBindings()
              }
          }
-
-
      }
 
 

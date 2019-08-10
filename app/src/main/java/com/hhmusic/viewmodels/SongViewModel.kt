@@ -5,7 +5,7 @@ import android.net.Uri
 import android.provider.MediaStore
 import androidx.lifecycle.*
 import com.hhmusic.HHMusicApplication
-import com.hhmusic.data.entities.Song
+import com.hhmusic.data.model.Song
 import android.content.ContentUris
 
 
@@ -72,7 +72,16 @@ class SongViewModel : ViewModel() {
                     sArtworkUri,
                     albumId
                 )
-                listSong.add(Song(songId,songTitle, songArtist, songAlbum, songDuration,albumArtUri))
+                listSong.add(
+                    Song(
+                        songId,
+                        songTitle,
+                        songArtist,
+                        songAlbum,
+                        songDuration,
+                        albumArtUri
+                    )
+                )
 
             } while (cursor.moveToNext())
         }

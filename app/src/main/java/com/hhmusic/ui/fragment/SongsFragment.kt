@@ -45,9 +45,5 @@ class SongsFragment: Fragment() {
             binding.songListview.adapter = adapter
             }
         })
-
     }
-
-
-
 }

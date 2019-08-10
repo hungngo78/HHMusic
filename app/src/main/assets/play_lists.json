@@ -1,0 +1,22 @@
+[
+  {
+    "name": "Favorites",
+    "isDefault": true
+  },
+  {
+    "name": "Most played",
+    "isDefault": true
+  },
+  {
+    "name": "Recently played",
+    "isDefault": true
+  },
+  {
+    "name": "Newly added",
+    "isDefault": true
+  },
+  {
+    "name": "My playlist",
+    "isDefault": true
+  }
+]

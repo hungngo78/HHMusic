@@ -6,6 +6,7 @@ import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
 import com.hhmusic.R
 import com.hhmusic.ui.fragment.PlaceholderFragment
+import com.hhmusic.ui.fragment.PlayListsFragment
 import com.hhmusic.ui.fragment.SongsFragment
 
 private val TAB_TITLES = arrayOf(
@@ -26,10 +27,16 @@ class SectionsPagerAdapter(private val context: Context, fm: FragmentManager) : 
         // getItem is called to instantiate the fragment for the given page.
         // Return a PlaceholderFragment (defined as a static inner class below).
 
+        when (position) {
+            0 -> return PlayListsFragment()
+            1 -> return SongsFragment()
+            else -> return PlaceholderFragment.newInstance(position + 1)
+        }
+        /*
         if (position == 1) {
             return SongsFragment()
         } else
-            return PlaceholderFragment.newInstance(position + 1)
+            return PlaceholderFragment.newInstance(position + 1)*/
     }
 
     override fun getPageTitle(position: Int): CharSequence? {
