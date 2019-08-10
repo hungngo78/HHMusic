@@ -36,10 +36,5 @@ data class Song(public var id: Long) {
 
         return HHMusicConstants.setCorrectDuration(duration)
     }
-
-
-
-
-
 }
 

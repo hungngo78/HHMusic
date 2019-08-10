@@ -55,7 +55,8 @@ class PlayListAdapter : ListAdapter<PlayList, PlayListAdapter.PlayListViewHolder
         }
 
         override fun areContentsTheSame(oldItem: PlayList, newItem: PlayList): Boolean {
-            return oldItem == newItem
+            return oldItem.name == newItem.name &&
+                    (oldItem.default && newItem.default)
         }
     }
 }

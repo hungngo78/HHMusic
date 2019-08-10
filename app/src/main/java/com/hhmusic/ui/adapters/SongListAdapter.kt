@@ -8,7 +8,8 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.hhmusic.HHMusicApplication
-import com.hhmusic.data.model.Song
+//import com.hhmusic.data.model.Song
+import com.hhmusic.data.entities.Song
 import com.hhmusic.databinding.SongListItemBinding
 
 class SongListAdapter: ListAdapter<Song, SongListAdapter.SongListViewHolder>(SongDiffCallback()) {
@@ -53,11 +54,16 @@ class SongListAdapter: ListAdapter<Song, SongListAdapter.SongListViewHolder>(Son
     private class SongDiffCallback : DiffUtil.ItemCallback<Song>() {
 
         override fun areItemsTheSame(oldItem: Song, newItem: Song): Boolean {
-            return oldItem.id == newItem.id
+            //return oldItem.id == newItem.id
+            return oldItem.songId == newItem.songId
         }
 
         override fun areContentsTheSame(oldItem: Song, newItem: Song): Boolean {
-            return oldItem == newItem
+            return oldItem.albumName == newItem.albumName &&
+                    oldItem.artistName == newItem.artistName &&
+                    oldItem.title == newItem.title &&
+                    oldItem.duration == newItem.duration &&
+                    oldItem.imagePathStr == newItem.imagePathStr
         }
     }
 }

@@ -18,21 +18,22 @@ import java.util.concurrent.Callable
  */
 class DBDataProvider: ContentProvider() {
 
-
     companion object {
-        val SONGS_TABLE_NAME = "songs"
 
         /** The authority of this content provider.  */
-        private val AUTHORITY = "com.hhmusic.android.contentprovider.provider"
+        private val AUTHORITY = DBDataContract.CONTENT_AUTHORITY
 
-        /** The URI for the Cheese table.  */
-        private val URI_PLAYLIST = Uri.parse(
-            "content://" + AUTHORITY + "/" + SONGS_TABLE_NAME
-        )
 
         /** The match code for some items in the Song table.  */
-        private val CODE_SONGS = 1
-        private val CODE_SONG_ID = 2
+        /**
+         * URI ID for route: /entries
+         */
+        val ROUTE_ENTRIES = 1
+
+        /**
+         * URI ID for route: /entries/{ID}
+         */
+        val ROUTE_ENTRIES_ID = 2
 
         /** The URI matcher.  */
         /**
@@ -40,8 +41,8 @@ class DBDataProvider: ContentProvider() {
          */
         private val MATCHER = UriMatcher(UriMatcher.NO_MATCH)
         init {
-            MATCHER.addURI(AUTHORITY, SONGS_TABLE_NAME, CODE_SONGS)
-            MATCHER.addURI(AUTHORITY, SONGS_TABLE_NAME + "/*", CODE_SONG_ID)
+            MATCHER.addURI(AUTHORITY, "/entries", ROUTE_ENTRIES)
+            MATCHER.addURI(AUTHORITY, "/entries/*", ROUTE_ENTRIES_ID)
         }
     }
 
@@ -49,18 +50,35 @@ class DBDataProvider: ContentProvider() {
         return true
     }
 
+    override fun getType(uri: Uri): String? {
+        when (MATCHER.match(uri)) {
+            /**
+             * MIME type for lists of entries.
+             */
+            ROUTE_ENTRIES -> return DBDataContract.Entry.CONTENT_TYPE
+
+            /**
+             * MIME type for individual entries.
+             */
+            ROUTE_ENTRIES_ID -> return DBDataContract.Entry.CONTENT_ITEM_TYPE
+
+            else -> throw IllegalArgumentException("Unknown URI: $uri")
+        }
+    }
+
     override fun query(
         uri: Uri, projection: Array<String>?, selection: String?,
         selectionArgs: Array<String>?, sortOrder: String?
     ): Cursor? {
         val code = MATCHER.match(uri)
-        if (code == CODE_SONGS || code == CODE_SONG_ID) {
+        if (code == ROUTE_ENTRIES || code == ROUTE_ENTRIES_ID) {
             val context = context ?: return null
             val songsDao = HHMusicDatabase.getInstance(context).songsDao()
             val cursor: Cursor
-            if (code == CODE_SONGS) {
+            if (code == ROUTE_ENTRIES) {
                 cursor = songsDao.selectAll()
             } else {
+                //val id = uri.lastPathSegment
                 cursor = songsDao.selectById(ContentUris.parseId(uri))
             }
             cursor.setNotificationUri(context.contentResolver, uri)
@@ -70,25 +88,9 @@ class DBDataProvider: ContentProvider() {
         }
     }
 
-    override fun getType(uri: Uri): String? {
-        when (MATCHER.match(uri)) {
-            /**
-             * MIME type for lists of entries.
-             */
-            CODE_SONGS -> return "vnd.android.cursor.dir/" + "/vnd.basicsyncadapter.entries";
-
-            /**
-             * MIME type for individual entries.
-             */
-            CODE_SONG_ID -> return "vnd.android.cursor.dir/" + "/vnd.basicsyncadapter.entry";
-
-            else -> throw IllegalArgumentException("Unknown URI: $uri")
-        }
-    }
-
     override fun insert(uri: Uri, values: ContentValues?): Uri? {
         when (MATCHER.match(uri)) {
-            CODE_SONGS -> {
+            ROUTE_ENTRIES -> {
                 val context = context ?: return null
 
                 values?.let {
@@ -101,7 +103,7 @@ class DBDataProvider: ContentProvider() {
 
                 return null
             }
-            CODE_SONG_ID -> throw IllegalArgumentException("Invalid URI, cannot insert with ID: $uri")
+            ROUTE_ENTRIES_ID -> throw IllegalArgumentException("Invalid URI, cannot insert with ID: $uri")
             else -> throw IllegalArgumentException("Unknown URI: $uri")
         }
     }
@@ -111,8 +113,8 @@ class DBDataProvider: ContentProvider() {
         selectionArgs: Array<String>?
     ): Int {
         when (MATCHER.match(uri)) {
-            CODE_SONGS -> throw IllegalArgumentException("Invalid URI, cannot update without ID$uri")
-            CODE_SONG_ID -> {
+            ROUTE_ENTRIES -> throw IllegalArgumentException("Invalid URI, cannot update without ID$uri")
+            ROUTE_ENTRIES_ID -> {
                 val context = context ?: return 0
                 val count = HHMusicDatabase.getInstance(context).songsDao()
                     .deleteById(ContentUris.parseId(uri))
@@ -129,8 +131,8 @@ class DBDataProvider: ContentProvider() {
         selectionArgs: Array<String>?
     ): Int {
         when (MATCHER.match(uri)) {
-            CODE_SONGS -> throw IllegalArgumentException("Invalid URI, cannot update without ID$uri")
-            CODE_SONG_ID -> {
+            ROUTE_ENTRIES -> throw IllegalArgumentException("Invalid URI, cannot update without ID$uri")
+            ROUTE_ENTRIES_ID -> {
                 val context = context ?: return 0
 
                 values?.let {
@@ -153,8 +155,7 @@ class DBDataProvider: ContentProvider() {
     override fun applyBatch(
         operations: ArrayList<ContentProviderOperation>
     ): Array<ContentProviderResult> {
-        // quái, chỗ nay ko biet viet lam sao
-         //val context = context ?: return arrayOfNulls(0)!!
+        //val context = context ?: return arrayOfNulls(0)!!
         val context = context
 
         val database = HHMusicDatabase.getInstance(context)
@@ -168,7 +169,7 @@ class DBDataProvider: ContentProvider() {
 
     override fun bulkInsert(uri: Uri, valuesArray: Array<ContentValues>): Int {
         when (MATCHER.match(uri)) {
-            CODE_SONGS -> {
+            ROUTE_ENTRIES -> {
                 val context = context ?: return 0
                 val database = HHMusicDatabase.getInstance(context)
 
@@ -180,7 +181,7 @@ class DBDataProvider: ContentProvider() {
 
                 return database.songsDao().insertAll(songs).size
             }
-            CODE_SONG_ID -> throw IllegalArgumentException("Invalid URI, cannot insert with ID: $uri")
+            ROUTE_ENTRIES_ID -> throw IllegalArgumentException("Invalid URI, cannot insert with ID: $uri")
             else -> throw IllegalArgumentException("Unknown URI: $uri")
         }
     }

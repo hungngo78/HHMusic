@@ -16,17 +16,7 @@ class PlayList(
     @ColumnInfo(name = "name") var name: String = ""
     @ColumnInfo(name = "isDefault") var default: Boolean = true
 
-    companion object {
-        val PLAY_LIST = arrayOf(
-            "Favorites",
-            "Most played",
-            "Recently played",
-            "Newly added",
-            "My playlist"
-        )
-    }
-
-    public fun getImageUrl(): String?{
+    fun getImageUrl(): String?{
         return "https://hungngobucket1.s3-us-west-1.amazonaws.com/Production/1000/Black+Sunflower/image1.jpg"
     }
 }

@@ -1,14 +1,12 @@
 package com.hhmusic.viewmodels
 
 import androidx.lifecycle.MediatorLiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
 import com.hhmusic.data.entities.PlayList
-import com.hhmusic.data.repository.PlayListRepository
+import com.hhmusic.data.repository.MusicRepository
 
 class PlayListViewModel internal constructor(
-    private val playListRepository: PlayListRepository
+    private val playListRepository: MusicRepository
 ) : ViewModel() {
 
     private val plantList = MediatorLiveData<List<PlayList>>()

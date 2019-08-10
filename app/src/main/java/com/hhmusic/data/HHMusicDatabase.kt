@@ -52,18 +52,4 @@ abstract class HHMusicDatabase : RoomDatabase() {
                 .build()
         }
     }
-
-    private fun populateInitialData() {
-        if (playListDao().count() === 0) {
-            runInTransaction { Runnable {
-                    val playList = PlayList()
-                    for (i in 0 until PlayList.PLAY_LIST.size) {
-                        playList.name = PlayList.PLAY_LIST[i]
-                        playList.default = true
-                        playListDao().insert(playList)
-                    }
-                }
-            }
-        }
-    }
 }

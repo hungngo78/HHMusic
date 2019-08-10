@@ -5,19 +5,22 @@ import android.net.Uri
 import android.provider.MediaStore
 import androidx.lifecycle.*
 import com.hhmusic.HHMusicApplication
-import com.hhmusic.data.model.Song
+//import com.hhmusic.data.model.Song
+import com.hhmusic.data.entities.Song
 import android.content.ContentUris
+import com.hhmusic.data.repository.MusicRepository
 
 
-
-class SongViewModel : ViewModel() {
+class SongViewModel internal constructor(
+    private val songRepository: MusicRepository
+) : ViewModel() {
 
 
     val mObserverSongList = MediatorLiveData<List<Song>>()
-    val songList : MutableLiveData<List<Song>> =  MutableLiveData<List<Song>>()
+    //val songList : MutableLiveData<List<Song>> =  MutableLiveData<List<Song>>()
 
     init {
-
+        var songList = songRepository.getSongList()
         mObserverSongList.addSource(songList, mObserverSongList::setValue)
     }
 
@@ -30,6 +33,8 @@ class SongViewModel : ViewModel() {
     fun getSongList() {
 
         var listSong : ArrayList<Song> =  ArrayList<Song>()
+
+        /*
         val uri: Uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
         val selection = MediaStore.Audio.Media.IS_MUSIC + " != 0"
 
@@ -87,7 +92,7 @@ class SongViewModel : ViewModel() {
         }
 
         songList.value = listSong;
-
+        */
 
     }
 

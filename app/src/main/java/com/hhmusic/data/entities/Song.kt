@@ -5,16 +5,18 @@ import android.net.Uri
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.hhmusic.utilities.HHMusicConstants
+
 
 @Entity(tableName = "songs")
 class Song(
-
+    @PrimaryKey @ColumnInfo(name = "id") var songId: Long = 0,
+    @ColumnInfo(name = "title") var title: String = "",
+    @ColumnInfo(name = "artistName") var artistName: String = "",
+    @ColumnInfo(name = "albumName") var albumName: String = "",
+    @ColumnInfo(name = "duration") var duration: Long = 0,
+    @ColumnInfo(name = "imagePathStr") var imagePathStr: String = ""
 ) {
-    @PrimaryKey @ColumnInfo(name = "id") var songId: Long = 0
-    @ColumnInfo(name = "title") var title: String = ""
-    @ColumnInfo(name = "artistName") var artistName: String = ""
-    @ColumnInfo(name = "albumName") var albumName: String = ""
-    @ColumnInfo(name = "duration") var duration: Long = 0
 
     companion object {
         /**
@@ -42,11 +44,22 @@ class Song(
                 if (values.containsKey("duration")) {
                     song.duration = values.getAsLong("duration")
                 }
+                if (values.containsKey("imagePathStr")) {
+                    song.imagePathStr = values.getAsString("imagePathStr")
+                }
 
                 return song
             //}
             //return null!!
         }
+    }
+
+    public fun getImageUrl(): String?{
+        return imagePathStr
+    }
+    public fun getDurationFormat(): String?{
+
+        return HHMusicConstants.setCorrectDuration(duration)
     }
 
     override fun toString() = title
