@@ -28,6 +28,8 @@ buildscript {
         supportLibraryVersion = '1.0.2'
         uiAutomatorVersion = '2.2.0-alpha4'
         workVersion = '1.0.0-beta02'
+        androidx_media_version = '1.0.1'
+        exoplayer_version = '2.10.0'
     }
     repositories {
         google()

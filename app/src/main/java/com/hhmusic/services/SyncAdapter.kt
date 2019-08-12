@@ -41,6 +41,7 @@ class SyncAdapter @JvmOverloads constructor(
         DBDataContract.Entry.COLUMN_NAME_ARTIST_NAME,
         DBDataContract.Entry.COLUMN_NAME_ALBUM_NAME,
         DBDataContract.Entry.COLUMN_NAME_DURATION,
+        DBDataContract.Entry.COLUMN_NAME_URI_STR,
         DBDataContract.Entry.COLUMN_NAME_IMAGE_PATH_STR
     ) //as Array<String>
 
@@ -75,7 +76,7 @@ class SyncAdapter @JvmOverloads constructor(
             return
         }
 
-            Log.i(TAG, "Network synchronization complete")
+        Log.i(TAG, "Media synchronization complete")
     }
 
 
@@ -110,6 +111,7 @@ class SyncAdapter @JvmOverloads constructor(
         var artistName: String
         var albumName: String
         var duration: Long
+        var uriStr : String
         var imagePathStr: String
 
         // representing column positions from PROJECTION.
@@ -118,6 +120,7 @@ class SyncAdapter @JvmOverloads constructor(
         var artistNameIndex: Int
         var albumNameIndex: Int
         var durationIndex: Int
+        var uriStrIndex: Int
         var imagePathStrIndex: Int
 
         while (c.moveToNext()) {
@@ -129,6 +132,7 @@ class SyncAdapter @JvmOverloads constructor(
             artistNameIndex = c.getColumnIndexOrThrow(DBDataContract.Entry.COLUMN_NAME_ARTIST_NAME)
             albumNameIndex = c.getColumnIndexOrThrow(DBDataContract.Entry.COLUMN_NAME_ALBUM_NAME)
             durationIndex = c.getColumnIndexOrThrow(DBDataContract.Entry.COLUMN_NAME_DURATION)
+            uriStrIndex = c.getColumnIndexOrThrow(DBDataContract.Entry.COLUMN_NAME_URI_STR)
             imagePathStrIndex = c.getColumnIndexOrThrow(DBDataContract.Entry.COLUMN_NAME_IMAGE_PATH_STR)
 
             // get values from cursor
@@ -137,6 +141,7 @@ class SyncAdapter @JvmOverloads constructor(
             artistName = c.getString(artistNameIndex)
             albumName = c.getString(albumNameIndex)
             duration = c.getLong(durationIndex)
+            uriStr = c.getString(uriStrIndex)
             imagePathStr = c.getString(imagePathStrIndex)
 
             val match = entryMap.get(entryId)
@@ -152,6 +157,7 @@ class SyncAdapter @JvmOverloads constructor(
                     match!!.albumName != null && !match!!.albumName.equals(albumName) ||
                     match!!.artistName != null && !match!!.artistName.equals(artistName) ||
                     !match!!.duration.equals(duration) ||
+                    match!!.uriStr != null && !match!!.uriStr.equals(uriStr) ||
                     match!!.imagePathStr != null && !match!!.imagePathStr.equals(imagePathStr)
                 ) {
                     // Update existing record
@@ -162,6 +168,7 @@ class SyncAdapter @JvmOverloads constructor(
                             .withValue(DBDataContract.Entry.COLUMN_NAME_ARTIST_NAME, match!!.artistName)
                             .withValue(DBDataContract.Entry.COLUMN_NAME_ALBUM_NAME, match!!.albumName)
                             .withValue(DBDataContract.Entry.COLUMN_NAME_DURATION, match!!.duration)
+                            .withValue(DBDataContract.Entry.COLUMN_NAME_URI_STR, match!!.uriStr)
                             .withValue(DBDataContract.Entry.COLUMN_NAME_IMAGE_PATH_STR, match!!.imagePathStr)
                             .build()
                     )
@@ -192,6 +199,7 @@ class SyncAdapter @JvmOverloads constructor(
                     .withValue(DBDataContract.Entry.COLUMN_NAME_ARTIST_NAME, e.artistName)
                     .withValue(DBDataContract.Entry.COLUMN_NAME_ALBUM_NAME, e.albumName)
                     .withValue(DBDataContract.Entry.COLUMN_NAME_DURATION, e.duration)
+                    .withValue(DBDataContract.Entry.COLUMN_NAME_URI_STR, e.uriStr)
                     .withValue(DBDataContract.Entry.COLUMN_NAME_IMAGE_PATH_STR, e.imagePathStr)
                     .build()
             )
@@ -229,6 +237,7 @@ class SyncAdapter @JvmOverloads constructor(
             val id : Int = cursor.getColumnIndex(MediaStore.Audio.Media._ID)
             val title: Int = cursor.getColumnIndex(MediaStore.Audio.Media.TITLE)
             val duration: Int = cursor.getColumnIndex(MediaStore.Audio.Media.DURATION)
+            val data: Int = cursor.getColumnIndex(MediaStore.Audio.Media.DATA)
             val albumName: Int = cursor.getColumnIndex(MediaStore.Audio.Media.ALBUM)
             val albumID: Int = cursor.getColumnIndex(MediaStore.Audio.Media.ALBUM_ID)
             val artistName: Int = cursor.getColumnIndex(MediaStore.Audio.Media.ARTIST)
@@ -239,6 +248,7 @@ class SyncAdapter @JvmOverloads constructor(
                 val songAlbum: String = cursor.getString(albumName)
                 val songArtist: String = cursor.getString(artistName)
                 val songDuration: Long = cursor.getLong(duration)
+                val songUriStr: String = cursor.getString(data)
                 val albumId: Long = cursor.getLong(albumID)
 
                 val sArtworkUri = Uri
@@ -247,6 +257,7 @@ class SyncAdapter @JvmOverloads constructor(
                     sArtworkUri,
                     albumId
                 ).toString()
+
                 listSong.add(
                     Song(
                         songId,
@@ -254,6 +265,7 @@ class SyncAdapter @JvmOverloads constructor(
                         songArtist,
                         songAlbum,
                         songDuration,
+                        songUriStr,
                         albumArtUri
                     )
                 )

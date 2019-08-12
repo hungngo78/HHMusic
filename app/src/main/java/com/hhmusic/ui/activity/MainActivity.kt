@@ -1,6 +1,8 @@
 package com.hhmusic.ui.activity
 
 import android.Manifest
+import android.content.Context
+import android.content.Intent
 import android.accounts.Account
 import android.content.pm.PackageManager
 import android.os.Build
@@ -19,7 +21,8 @@ import com.google.android.material.tabs.TabLayout
 import com.hhmusic.R
 import com.hhmusic.ui.activity.ui.main.SectionsPagerAdapter
 
-import androidx.appcompat.app.AlertDialog
+import com.hhmusic.data.entities.Song
+import com.hhmusic.ui.fragment.NowPlayerFragment
 import com.hhmusic.utilities.SyncUtils
 
 
@@ -206,4 +209,42 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         drawerLayout.closeDrawer(GravityCompat.START)
         return true
     }
+
+    fun openPlayerScreen(intent: Intent) {
+
+        intent?.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
+
+        startActivity(intent)
+
+    }
+
+    companion object {
+
+        const val KEY_SONGS = "song"
+        const val KEY_SONG_ID ="songId"
+        const val KEY_SONG_POSITION ="songPosition"
+
+        fun getBundle(context: Context, song: ArrayList<Song>, songId: Long, position: Int): Bundle {
+            //val intent = Intent(context, PlayerActivity::class.java)
+            val bundle = Bundle().apply {
+                putParcelableArrayList(KEY_SONGS, song)
+                putLong(KEY_SONG_ID, songId)
+                putInt(KEY_SONG_POSITION, position)
+            }
+
+            return bundle
+        }
+
+
+        fun getIntent(context: Context, songList: ArrayList<Song>, songId: Long, position: Int): Intent {
+            val intent = Intent(context, PlayerActivity::class.java)
+            intent.putParcelableArrayListExtra(KEY_SONGS, songList)
+            intent.putExtra(KEY_SONG_ID, songId)
+            intent.setAction(PlayerActivity.ACTION_VIEW);
+
+            //intent.putExtra(KEY_SONG_POSITION, position)
+            return intent
+        }
+    }
+
 }

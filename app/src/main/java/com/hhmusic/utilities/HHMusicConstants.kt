@@ -5,6 +5,8 @@ import java.lang.reflect.Constructor
 object HHMusicConstants {
 
 
+
+
     public fun setCorrectDuration(songs_duration: Long): String? {
         var songs_duration = songs_duration
         // TODO Auto-generated method stub

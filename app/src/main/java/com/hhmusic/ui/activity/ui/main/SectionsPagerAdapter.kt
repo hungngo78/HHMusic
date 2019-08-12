@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
 import com.hhmusic.R
+import com.hhmusic.ui.activity.MainActivity
 import com.hhmusic.ui.fragment.PlaceholderFragment
 import com.hhmusic.ui.fragment.PlayListsFragment
 import com.hhmusic.ui.fragment.SongsFragment
@@ -21,7 +22,7 @@ private val TAB_TITLES = arrayOf(
  * A [FragmentPagerAdapter] that returns a fragment corresponding to
  * one of the sections/tabs/pages.
  */
-class SectionsPagerAdapter(private val context: Context, fm: FragmentManager) : FragmentPagerAdapter(fm) {
+class SectionsPagerAdapter(private val context: MainActivity, fm: FragmentManager) : FragmentPagerAdapter(fm) {
 
     override fun getItem(position: Int): Fragment {
         // getItem is called to instantiate the fragment for the given page.
@@ -29,12 +30,12 @@ class SectionsPagerAdapter(private val context: Context, fm: FragmentManager) : 
 
         when (position) {
             0 -> return PlayListsFragment()
-            1 -> return SongsFragment()
+            1 -> return SongsFragment(context)
             else -> return PlaceholderFragment.newInstance(position + 1)
         }
         /*
         if (position == 1) {
-            return SongsFragment()
+            return SongsFragment(context)
         } else
             return PlaceholderFragment.newInstance(position + 1)*/
     }
@@ -44,7 +45,7 @@ class SectionsPagerAdapter(private val context: Context, fm: FragmentManager) : 
     }
 
     override fun getCount(): Int {
-        // Show 2 total pages.
+        // Show 5 total pages.
         return 5
     }
 }

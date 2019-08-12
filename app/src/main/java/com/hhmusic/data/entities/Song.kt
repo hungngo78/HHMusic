@@ -1,24 +1,55 @@
 package com.hhmusic.data.entities
 
 import android.content.ContentValues
-import android.net.Uri
+
+import android.os.Parcel
+import android.os.Parcelable
+import com.hhmusic.utilities.HHMusicConstants
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.hhmusic.utilities.HHMusicConstants
 
-
+//@SuppressLint("ParcelCreator")
 @Entity(tableName = "songs")
-class Song(
-    @PrimaryKey @ColumnInfo(name = "id") var songId: Long = 0,
-    @ColumnInfo(name = "title") var title: String = "",
-    @ColumnInfo(name = "artistName") var artistName: String = "",
-    @ColumnInfo(name = "albumName") var albumName: String = "",
-    @ColumnInfo(name = "duration") var duration: Long = 0,
-    @ColumnInfo(name = "imagePathStr") var imagePathStr: String = ""
-) {
+data class Song(  @PrimaryKey @ColumnInfo(name = "id") var songId: Long = 0,
+                    @ColumnInfo(name = "title") var title: String = "",
+                    @ColumnInfo(name = "artistName") var artistName: String = "",
+                    @ColumnInfo(name = "albumName") var albumName: String = "",
+                    @ColumnInfo(name = "duration") var duration: Long = 0,
+                    @ColumnInfo(name = "uriStr") var uriStr: String = "",
+                    @ColumnInfo(name = "imagePathStr") var imagePathStr: String = ""
+) : Parcelable{
+
+
+    private constructor(parcel: Parcel) : this (
+        songId = parcel.readLong(),
+        title = parcel.readString(),
+        artistName = parcel.readString(),
+        albumName = parcel.readString(),
+        duration = parcel.readLong(),
+        uriStr = parcel.readString(),
+        imagePathStr = parcel.readString()
+    )
+
+    override fun writeToParcel(dest: Parcel, flags: Int)  {
+        dest.writeLong(songId)
+        dest.writeString(title)
+        dest.writeString(artistName)
+        dest.writeString(albumName)
+        dest.writeLong(duration)
+        dest.writeString(uriStr)
+        dest.writeString(imagePathStr)
+    }
+
+    override fun describeContents() = 0
 
     companion object {
+        @JvmField
+        val CREATOR = object : Parcelable.Creator<Song> {
+            override fun createFromParcel(parcel: Parcel) = Song(parcel)
+            override fun newArray(size: Int) = arrayOfNulls<Song>(size)
+        }
+
         /**
          * Create a new [Song] from the specified [ContentValues].
          *
@@ -44,6 +75,9 @@ class Song(
                 if (values.containsKey("duration")) {
                     song.duration = values.getAsLong("duration")
                 }
+                if (values.containsKey("uriStr")) {
+                    song.uriStr = values.getAsString("uriStr")
+                }
                 if (values.containsKey("imagePathStr")) {
                     song.imagePathStr = values.getAsString("imagePathStr")
                 }
@@ -61,6 +95,4 @@ class Song(
 
         return HHMusicConstants.setCorrectDuration(duration)
     }
-
-    override fun toString() = title
 }

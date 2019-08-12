@@ -11,9 +11,15 @@ import com.hhmusic.HHMusicApplication
 //import com.hhmusic.data.model.Song
 import com.hhmusic.data.entities.Song
 import com.hhmusic.databinding.SongListItemBinding
+import com.hhmusic.ui.activity.MainActivity
 
-class SongListAdapter: ListAdapter<Song, SongListAdapter.SongListViewHolder>(SongDiffCallback()) {
+class SongListAdapter(private val myActivity: MainActivity): ListAdapter<Song, SongListAdapter.SongListViewHolder>(SongDiffCallback()) {
 
+    lateinit var songList: List<Song>;
+
+    fun setSongList(list : ArrayList<Song>){
+        songList = ArrayList(list)
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SongListViewHolder {
 
@@ -25,16 +31,16 @@ class SongListAdapter: ListAdapter<Song, SongListAdapter.SongListViewHolder>(Son
 
         val song: Song = getItem(position)
         holder.apply {
-            bind(createOnClickListener(song), song)
+            bind(createOnClickListener(song, position), song)
             itemView.tag = song
         }
     }
 
 
-    private fun createOnClickListener(song: Song): View.OnClickListener {
+    private fun createOnClickListener(song: Song, position: Int): View.OnClickListener {
         return View.OnClickListener {
-            //val direction = PlantListFragmentDirections.ActionPlantListFragmentToPlantDetailFragment(plantId)
-            //it.findNavController().navigate(direction)
+            val bundle =  MainActivity.getIntent(it.context, ArrayList(songList), song.songId, position)
+            myActivity.openPlayerScreen(bundle)
             Toast.makeText(HHMusicApplication.applicationContext(), "Play song", Toast.LENGTH_SHORT).show()
         }
     }
@@ -63,6 +69,7 @@ class SongListAdapter: ListAdapter<Song, SongListAdapter.SongListViewHolder>(Son
                     oldItem.artistName == newItem.artistName &&
                     oldItem.title == newItem.title &&
                     oldItem.duration == newItem.duration &&
+                    oldItem.uriStr == newItem.uriStr &&
                     oldItem.imagePathStr == newItem.imagePathStr
         }
     }
