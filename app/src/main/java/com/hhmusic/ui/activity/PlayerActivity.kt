@@ -20,14 +20,9 @@ import com.hhmusic.databinding.ContentPlayerBinding
 
 import kotlinx.android.synthetic.main.activity_player.*
 import com.google.android.exoplayer2.source.ConcatenatingMediaSource
-import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory
 import com.google.android.exoplayer2.source.MediaSource
-import android.R
 import android.view.KeyEvent
 import androidx.databinding.DataBindingUtil
-import androidx.databinding.ViewDataBinding
-import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory
-import com.google.android.exoplayer2.source.ExtractorMediaSource
 import com.google.android.exoplayer2.upstream.FileDataSourceFactory
 
 
@@ -53,10 +48,6 @@ class PlayerActivity : AppCompatActivity(), PlaybackPreparer, PlayerControlView.
     private val KEY_POSITION = "position"
     private val KEY_AUTO_PLAY = "auto_play"
 
-    val SPHERICAL_STEREO_MODE_EXTRA = "spherical_stereo_mode"
-    val SPHERICAL_STEREO_MODE_MONO = "mono"
-    val SPHERICAL_STEREO_MODE_TOP_BOTTOM = "top_bottom"
-    val SPHERICAL_STEREO_MODE_LEFT_RIGHT = "left_right"
 
     companion object {
         val ACTION_VIEW = "com.hhmusic.android.action.VIEW"
@@ -156,22 +147,25 @@ class PlayerActivity : AppCompatActivity(), PlaybackPreparer, PlayerControlView.
 
     public override fun onPause() {
         super.onPause()
+
+        /*
         if (Util.SDK_INT <= 23) {
             if (binding.playerView != null) {
                 binding.playerView.onPause()
             }
             releasePlayer()
-        }
+        }*/
     }
 
     public override fun onStop() {
         super.onStop()
+        /*
         if (Util.SDK_INT > 23) {
             if (binding.playerView != null) {
                 binding.playerView.onPause()
             }
             releasePlayer()
-        }
+        }*/
     }
 
     public override fun onDestroy() {
