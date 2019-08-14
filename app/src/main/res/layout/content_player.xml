@@ -13,78 +13,79 @@
                   type="com.hhmusic.data.entities.Song"/>
     </data>
 
-<androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        tools:showIn="@layout/activity_player"
-        tools:context=".ui.activity.PlayerActivity">
-
     <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="70dp"
-            android:layout_marginTop="16dp"
-            app:layout_constraintVertical_weight="1"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            android:id="@+id/constraintLayout" android:layout_marginBottom="8dp" tools:layout_editor_absoluteX="0dp"
-            app:layout_constraintVertical_bias="0.0">
+            android:layout_height="match_parent"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"
+            tools:showIn="@layout/activity_player"
+            tools:context=".ui.activity.PlayerActivity">
 
-        <ImageButton android:layout_width="@dimen/btn_player"
-                     android:layout_height="@dimen/btn_player"
-                     android:src="@android:drawable/ic_input_add"
-                     android:id="@+id/add_to_playlist"
-                     android:onClick="@{clickListener}"
-                     android:layout_margin="10dp"
-                     android:layout_marginTop="16dp"
-                     app:layout_constraintTop_toTopOf="@id/constraintLayout"
-                     app:layout_constraintStart_toStartOf="parent"
-                     app:layout_constraintRight_toLeftOf="@+id/title"/>
-        <TextView android:id="@+id/title"
-                  android:layout_width="wrap_content"
-                  android:layout_height="22dp"
-                  app:layout_constraintTop_toTopOf="parent"
-                  app:layout_constraintStart_toStartOf="parent"
-                  app:layout_constraintRight_toLeftOf="parent"
-                  app:layout_constraintEnd_toEndOf="parent"
-                  android:maxLines="1"
-                  android:text="@{songItem.title}"
-                  android:textSize="18sp"
-                  android:textColor="@android:color/holo_blue_light"
-                  android:textAlignment="center"
-                  tools:text="Song title" android:layout_marginTop="16dp"/>
+        <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="70dp"
+                android:layout_marginTop="16dp"
+                app:layout_constraintVertical_weight="1"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:id="@+id/constraintLayout" android:layout_marginBottom="8dp" tools:layout_editor_absoluteX="0dp"
+                app:layout_constraintVertical_bias="0.0">
 
-        <ImageButton android:layout_width="@dimen/btn_player"
-                     android:layout_height="@dimen/btn_player"
-                     android:id="@+id/view_song_playlist"
-                     android:onClick="@{clickListener}"
-                     app:layout_constraintLeft_toRightOf="@+id/title"
-                     app:layout_constraintTop_toTopOf="@id/constraintLayout"
-                     app:layout_constraintEnd_toEndOf="parent"
-                     android:src="@android:drawable/ic_dialog_dialer"
-                     android:layout_margin="10dp"/>
-        <TextView android:id="@+id/artist"
-                  android:layout_width="wrap_content"
-                  android:layout_height="wrap_content"
-                  android:maxLines="1"
-                  android:textAlignment="center"
-                  android:textColor="@android:color/holo_blue_light"
-                  android:text="@{songItem.artistName}"
-                  app:layout_constraintStart_toStartOf="parent"
-                  app:layout_constraintRight_toLeftOf="parent"
-                  app:layout_constraintEnd_toEndOf="parent"
-                  app:layout_constraintTop_toBottomOf="@+id/title"
-                  android:layout_marginEnd="8dp"
-                  tools:text="Song artist Title"/>
+            <ImageButton android:layout_width="@dimen/btn_player"
+                         android:layout_height="@dimen/btn_player"
+                         android:src="@android:drawable/ic_input_add"
+                         android:id="@+id/add_to_playlist"
+
+                         android:layout_margin="10dp"
+                         android:layout_marginTop="16dp"
+                         app:layout_constraintTop_toTopOf="@id/constraintLayout"
+                         app:layout_constraintStart_toStartOf="parent"
+                         app:layout_constraintRight_toLeftOf="@+id/title"/>
+            <TextView android:id="@+id/title"
+                      android:layout_width="wrap_content"
+                      android:layout_height="22dp"
+                      app:layout_constraintTop_toTopOf="parent"
+                      app:layout_constraintStart_toStartOf="parent"
+                      app:layout_constraintRight_toLeftOf="parent"
+                      app:layout_constraintEnd_toEndOf="parent"
+                      android:maxLines="1"
+                      android:text="@{songItem.title}"
+                      android:textSize="18sp"
+                      android:textColor="@android:color/holo_blue_light"
+                      android:textAlignment="center"
+                      tools:text="Song title" android:layout_marginTop="16dp"/>
+
+            <ImageButton android:layout_width="@dimen/btn_player"
+                         android:layout_height="@dimen/btn_player"
+                         android:id="@+id/view_song_playlist"
+                         android:onClick="@{clickListener}"
+                         app:layout_constraintLeft_toRightOf="@+id/title"
+                         app:layout_constraintTop_toTopOf="@id/constraintLayout"
+                         app:layout_constraintEnd_toEndOf="parent"
+                         android:src="@android:drawable/ic_dialog_dialer"
+                         android:layout_margin="10dp"/>
+            <TextView android:id="@+id/artist"
+                      android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                      android:maxLines="1"
+                      android:textAlignment="center"
+                      android:textColor="@android:color/holo_blue_light"
+                      android:text="@{songItem.artistName}"
+                      app:layout_constraintStart_toStartOf="parent"
+                      app:layout_constraintRight_toLeftOf="parent"
+                      app:layout_constraintEnd_toEndOf="parent"
+                      app:layout_constraintTop_toBottomOf="@+id/title"
+                      android:layout_marginEnd="8dp"
+                      tools:text="Song artist Title"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <com.google.android.exoplayer2.ui.PlayerView android:id="@+id/player_view"
+                                                     android:layout_width="match_parent"
+                                                     android:layout_height="match_parent"
+                                                     tools:layout_editor_absoluteX="0dp"
+                                                     android:layout_marginTop="120dp"
+                                                     app:layout_constraintTop_toBottomOf="@+id/constraintLayout"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <com.google.android.exoplayer2.ui.PlayerView android:id="@+id/player_view"
-                                                 android:layout_width="match_parent"
-                                                 android:layout_height="match_parent"
-                                                 tools:layout_editor_absoluteX="68dp"
-                                                 tools:layout_editor_absoluteY="531dp"/>
-
-</androidx.constraintlayout.widget.ConstraintLayout>
 
 </layout>

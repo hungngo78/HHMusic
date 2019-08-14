@@ -11,6 +11,8 @@ import com.hhmusic.data.entities.PlayList
 import com.hhmusic.data.entities.Song
 import com.hhmusic.data.entities.PlayListSongJoin;
 
+//https://android.jlelse.eu/android-architecture-components-room-relationships-bf473510c14a
+
 @Dao
 interface PlayListSongJoinDAO {
     @Insert

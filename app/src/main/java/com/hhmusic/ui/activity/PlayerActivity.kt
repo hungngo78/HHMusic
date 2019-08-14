@@ -3,11 +3,11 @@ package com.hhmusic.ui.activity
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.os.Parcelable
 import android.util.Pair
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity;
 import com.google.android.exoplayer2.*
-import com.google.android.exoplayer2.audio.AudioAttributes
 import com.google.android.exoplayer2.mediacodec.MediaCodecRenderer
 import com.google.android.exoplayer2.mediacodec.MediaCodecUtil
 import com.google.android.exoplayer2.source.*
@@ -18,55 +18,43 @@ import com.google.android.exoplayer2.util.Util
 import com.hhmusic.data.entities.Song
 import com.hhmusic.databinding.ContentPlayerBinding
 
+import android.view.View.OnClickListener
+
 import kotlinx.android.synthetic.main.activity_player.*
-import com.google.android.exoplayer2.source.ConcatenatingMediaSource
 import com.google.android.exoplayer2.source.MediaSource
 import android.view.KeyEvent
+import android.view.View
 import androidx.databinding.DataBindingUtil
 import com.google.android.exoplayer2.upstream.FileDataSourceFactory
+import com.hhmusic.HHMusicApplication
+import com.hhmusic.utilities.PlayerManager
 
 
-
-
-class PlayerActivity : AppCompatActivity(), PlaybackPreparer, PlayerControlView.VisibilityListener {
+class PlayerActivity : AppCompatActivity(), PlaybackPreparer, PlayerControlView.VisibilityListener, OnClickListener {
 
     lateinit var binding: ContentPlayerBinding
 
-    private var songList: ArrayList<Song> = ArrayList()
-    private var songId: Long = 0
-
-    private var player: SimpleExoPlayer? = null
-    private var mediaSource: MediaSource? = null
-    private var uris: ArrayList<Uri> = ArrayList()
-
     private var startAutoPlay: Boolean = true
-    private var startWindow: Int = 0
-    private var startPosition: Long = 0
+    private var startWindow: Int = C.INDEX_UNSET
+    private var startPosition: Long = C.TIME_UNSET
 
     // Saved instance state keys.
     private val KEY_WINDOW = "window"
     private val KEY_POSITION = "position"
     private val KEY_AUTO_PLAY = "auto_play"
 
+    private var playerManager: PlayerManager? = null
+
 
     companion object {
         val ACTION_VIEW = "com.hhmusic.android.action.VIEW"
-        val ACTION_VIEW_LIST = "com.hhmusic.android.action.VIEW_LIST"
+        //val ACTION_VIEW_LIST = "com.hhmusic.android.action.VIEW_LIST"
     }
 
-    private fun getSongToPlay(songId: Long) : Song? {
-        for (s: Song in songList) {
-            if (s.songId == songId)
-                return s
-        }
-        return null
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        //val sphericalStereoMode = intent.getStringExtra(SPHERICAL_STEREO_MODE_EXTRA)
-        //if (sphericalStereoMode != null) {
-            setTheme(com.hhmusic.R.style.PlayerTheme_Spherical)
-        //}
+        // set background color
+        setTheme(com.hhmusic.R.style.PlayerTheme_Spherical)
 
         super.onCreate(savedInstanceState)
         setContentView(com.hhmusic.R.layout.activity_player)
@@ -74,35 +62,24 @@ class PlayerActivity : AppCompatActivity(), PlaybackPreparer, PlayerControlView.
 
         binding = DataBindingUtil.setContentView<ContentPlayerBinding>(this, com.hhmusic.R.layout.content_player)
 
-        var song: Song? = null
-        val bundle: Bundle? = intent.extras
+        playerManager = (application as HHMusicApplication).getPlayerManager()
+        val action = intent.action
+        if (ACTION_VIEW == action) {
+            val song: Song? = intent.getParcelableExtra<Parcelable>(MainActivity.KEY_SONGS) as Song
+            song?.let {
+                var songList: ArrayList<Song> = ArrayList()
+                songList.add(song)
+                playerManager?.setSongList(songList)
 
-        bundle?.let {
-            songList = bundle.getParcelableArrayList<Song>(MainActivity.KEY_SONGS)
-            if (songList != null && songList.size > 0) {
-                val action = intent.action
-                if (ACTION_VIEW == action) {
-                    songId = bundle.getLong(MainActivity.KEY_SONG_ID)
-
-                    song = getSongToPlay(songId) ?: songList.get(0)
-
-                    song?.let {
-                        var uri = Uri.parse(song?.uriStr)
-                        uris.add(uri)
-
-                        binding.songItem = song
-                    }
-                } else if (ACTION_VIEW_LIST == action) {
-                    // get albumId
-                    // ....
-                } else {
-                    showToast(getString(com.hhmusic.R.string.unexpected_intent_action, action))
-                    return
-                }
+                // bind song object onto UI
+                binding.songItem = song
             }
         }
 
+        binding.addToPlaylist.setOnClickListener(this)
+
         binding.playerView.setControllerVisibilityListener(this)   // use the controller prev, next ...
+        binding.playerView.setControlDispatcher(PlayerControlDispatcher())  // detect the click event of exoplayer play/pause button
         binding.playerView.setErrorMessageProvider(PlayerErrorMessageProvider())
         binding.playerView.requestFocus()
 
@@ -110,9 +87,15 @@ class PlayerActivity : AppCompatActivity(), PlaybackPreparer, PlayerControlView.
             startAutoPlay = savedInstanceState.getBoolean(KEY_AUTO_PLAY)
             startWindow = savedInstanceState.getInt(KEY_WINDOW)
             startPosition = savedInstanceState.getLong(KEY_POSITION)
+
+            playerManager?.updateStartPosition(startAutoPlay, startWindow, startPosition)
         } else {
             clearStartPosition()
         }
+    }
+
+    override fun onClick(view: View) {
+        playerManager?.togglePlayStop()
     }
 
     public override fun onNewIntent(intent: Intent) {
@@ -134,44 +117,6 @@ class PlayerActivity : AppCompatActivity(), PlaybackPreparer, PlayerControlView.
         }
     }
 
-    public override fun onResume() {
-        super.onResume()
-        if (Util.SDK_INT <= 23 || player == null) {
-            initializePlayer()
-
-            binding.playerView?.let {
-                binding.playerView.onResume()
-            }
-        }
-    }
-
-    public override fun onPause() {
-        super.onPause()
-
-        /*
-        if (Util.SDK_INT <= 23) {
-            if (binding.playerView != null) {
-                binding.playerView.onPause()
-            }
-            releasePlayer()
-        }*/
-    }
-
-    public override fun onStop() {
-        super.onStop()
-        /*
-        if (Util.SDK_INT > 23) {
-            if (binding.playerView != null) {
-                binding.playerView.onPause()
-            }
-            releasePlayer()
-        }*/
-    }
-
-    public override fun onDestroy() {
-        super.onDestroy()
-    }
-
     public override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
 
@@ -190,7 +135,7 @@ class PlayerActivity : AppCompatActivity(), PlaybackPreparer, PlayerControlView.
 
     // PlaybackControlView.PlaybackPreparer implementation
     override fun preparePlayback() {
-        player?.retry()
+        playerManager?.retry()
     }
 
     // PlaybackControlView.VisibilityListener implementation
@@ -199,41 +144,12 @@ class PlayerActivity : AppCompatActivity(), PlaybackPreparer, PlayerControlView.
     }
 
     private fun initializePlayer() {
+        playerManager?.setPlayerEventListener(PlayerEventListener())
 
-        //if (player == null) {
-        player?:let{
-            player = ExoPlayerFactory.newSimpleInstance(
-                        this, DefaultRenderersFactory(this)
-                        , DefaultTrackSelector(),
-                        DefaultLoadControl())
+        binding.playerView.setPlayer(playerManager?.getPlayer())
+        binding.playerView.setPlaybackPreparer(this)
 
-            player?.apply {
-                // AudioAttributes here from exoplayer package !!!
-                val attr = AudioAttributes.Builder().setUsage(C.USAGE_MEDIA)
-                        .setContentType(C.CONTENT_TYPE_MUSIC)
-                        .build()
-                // In 2.9.X you don't need to manually handle audio focus :D
-                setAudioAttributes(attr, true)
-
-                addListener(PlayerEventListener())
-                playWhenReady = startAutoPlay
-            }
-
-            binding.playerView.setPlayer(player)
-            binding.playerView.setPlaybackPreparer(this)
-
-            val mediaSources = arrayOfNulls<MediaSource>(uris.size)
-            for (i in uris.indices) {
-                mediaSources[i] = buildMediaSource(uris[i])
-            }
-            mediaSource = if (mediaSources.size == 1) mediaSources[0] else ConcatenatingMediaSource(*mediaSources)
-        }
-
-        val haveStartPosition = startWindow != C.INDEX_UNSET
-        if (haveStartPosition) {
-            player?.seekTo(startWindow, startPosition)
-        }
-        player?.prepare(mediaSource, !haveStartPosition, false)
+        playerManager?.play()
     }
 
     private fun buildMediaSource(uri: Uri): MediaSource {
@@ -242,29 +158,26 @@ class PlayerActivity : AppCompatActivity(), PlaybackPreparer, PlayerControlView.
     }
 
     private fun updateStartPosition() {
-        if (player != null) {
-            startAutoPlay = player?.getPlayWhenReady() ?: true
-            startWindow = player?.getCurrentWindowIndex() ?: 0
-            startPosition = Math.max(0, player?.getContentPosition()?:0)
-        }
+        playerManager?.updateStartPosition()
     }
 
     private fun clearStartPosition() {
-        startAutoPlay = true
-        startWindow = C.INDEX_UNSET
-        startPosition = C.TIME_UNSET
+        playerManager?.clearStartPosition()
     }
 
     private fun releasePlayer() {
-        if (player != null) {
-            updateStartPosition()
-
-            player?.release()
-            player = null
-            mediaSource = null
-        }
+        playerManager?.releasePlayer()
     }
 
+    private inner class PlayerControlDispatcher : DefaultControlDispatcher() {
+        override fun dispatchSetPlayWhenReady(player: Player?, playWhenReady: Boolean): Boolean {
+            // Play button clicked: true
+            // Paused button clicked: false
+            playerManager?.isPlaying = playWhenReady
+
+            return super.dispatchSetPlayWhenReady(player, playWhenReady)
+        }
+    }
 
     private inner class PlayerEventListener : Player.EventListener {
 

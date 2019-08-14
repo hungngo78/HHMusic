@@ -18,11 +18,13 @@ import android.view.Menu
 import android.widget.Toast
 import androidx.viewpager.widget.ViewPager
 import com.google.android.material.tabs.TabLayout
+import com.hhmusic.HHMusicApplication
 import com.hhmusic.R
 import com.hhmusic.ui.activity.ui.main.SectionsPagerAdapter
 
 import com.hhmusic.data.entities.Song
 import com.hhmusic.ui.fragment.NowPlayerFragment
+import com.hhmusic.utilities.PlayerManager
 import com.hhmusic.utilities.SyncUtils
 
 
@@ -58,6 +60,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
          */
         mAccount = SyncUtils.CreateSyncAccount(applicationContext)
         SyncUtils.TriggerRefresh(mAccount)
+
+        var playerManager = PlayerManager.getInstance(applicationContext, null)
+        (application as HHMusicApplication).setPlayerManager(playerManager)
     }
 
     val MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 123
@@ -236,10 +241,12 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         }
 
 
-        fun getIntent(context: Context, songList: ArrayList<Song>, songId: Long, position: Int): Intent {
+        //fun getIntent(context: Context, songList: ArrayList<Song>, songId: Long, position: Int): Intent {
+        fun getIntent(context: Context, song: Song): Intent {
             val intent = Intent(context, PlayerActivity::class.java)
-            intent.putParcelableArrayListExtra(KEY_SONGS, songList)
-            intent.putExtra(KEY_SONG_ID, songId)
+            //intent.putParcelableArrayListExtra(KEY_SONGS, songList)
+            intent.putExtra(KEY_SONGS, song)
+            //intent.putExtra(KEY_SONG_ID, songId)
             intent.setAction(PlayerActivity.ACTION_VIEW);
 
             //intent.putExtra(KEY_SONG_POSITION, position)

@@ -2,9 +2,11 @@ package com.hhmusic
 
 import android.app.Application
 import android.content.Context
+import com.hhmusic.utilities.PlayerManager
 
 class HHMusicApplication: Application(){
 
+    private var playerManager: PlayerManager? = null
 
     init {
         instance = this
@@ -17,10 +19,7 @@ class HHMusicApplication: Application(){
 
         fun  applicationContext(): Context{
             return instance!!.applicationContext
-
         }
-
-
     }
 
     override fun onCreate() {
@@ -28,5 +27,11 @@ class HHMusicApplication: Application(){
         val context: Context = HHMusicApplication.applicationContext()
     }
 
+    fun setPlayerManager(manager: PlayerManager?) {
+        playerManager = manager
+    }
 
+    fun getPlayerManager() : PlayerManager? {
+        return playerManager
+    }
 }

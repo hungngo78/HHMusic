@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import com.hhmusic.databinding.FragmentSongListBinding
 import com.hhmusic.ui.activity.MainActivity
@@ -30,7 +31,8 @@ class SongsFragment(private val myActivity: MainActivity): Fragment() {
 
         val context = context ?: return binding.root
 
-        val factory = InjectorUtils.provideSongViewModelFactory(context)
+        //val factory = InjectorUtils.provideSongViewModelFactory(context)
+        val factory = InjectorUtils.provideViewModelFactory(context)
         viewModel = ViewModelProviders.of(this, factory).get(SongViewModel::class.java)
 
         binding = FragmentSongListBinding.inflate(inflater,container, false)

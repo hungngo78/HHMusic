@@ -23,7 +23,7 @@ class PlayListsFragment : Fragment() {
         binding = FragmentPlayListBinding.inflate(inflater,container, false)
         val context = context ?: return binding.root
 
-        val factory = InjectorUtils.providePlayListViewModelFactory(context)
+        val factory = InjectorUtils.provideViewModelFactory(context)
         viewModel = ViewModelProviders.of(this, factory).get(PlayListViewModel::class.java)
 
         mAdapter = PlayListAdapter()

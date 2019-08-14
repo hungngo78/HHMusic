@@ -39,7 +39,11 @@ class SongListAdapter(private val myActivity: MainActivity): ListAdapter<Song, S
 
     private fun createOnClickListener(song: Song, position: Int): View.OnClickListener {
         return View.OnClickListener {
-            val bundle =  MainActivity.getIntent(it.context, ArrayList(songList), song.songId, position)
+            var playerManager = (myActivity.application as HHMusicApplication).getPlayerManager()
+            playerManager?.setSongList(ArrayList(songList))
+
+            //val bundle =  MainActivity.getIntent(it.context, ArrayList(songList), song.songId, position)
+            val bundle =  MainActivity.getIntent(it.context, song)
             myActivity.openPlayerScreen(bundle)
             Toast.makeText(HHMusicApplication.applicationContext(), "Play song", Toast.LENGTH_SHORT).show()
         }

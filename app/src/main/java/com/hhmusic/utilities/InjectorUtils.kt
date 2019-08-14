@@ -3,19 +3,13 @@ package com.hhmusic.utilities
 import android.content.Context
 import com.hhmusic.data.HHMusicDatabase
 import com.hhmusic.data.repository.MusicRepository
-import com.hhmusic.viewmodels.PlayListViewModelFactory
-import com.hhmusic.viewmodels.SongViewModelFactory
+import com.hhmusic.viewmodels.ViewModelFactory
 
 object InjectorUtils {
 
-    fun providePlayListViewModelFactory(context: Context): PlayListViewModelFactory {
+    fun provideViewModelFactory(context: Context): ViewModelFactory {
         val repository = getMusicRepository(context)
-        return PlayListViewModelFactory(repository)
-    }
-
-    fun provideSongViewModelFactory(context: Context): SongViewModelFactory {
-        val repository = getMusicRepository(context)
-        return SongViewModelFactory(repository)
+        return ViewModelFactory(repository)
     }
 
     private fun getMusicRepository(context: Context): MusicRepository {
