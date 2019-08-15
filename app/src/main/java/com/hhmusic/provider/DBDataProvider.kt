@@ -4,6 +4,8 @@ import android.content.*
 import android.database.Cursor
 import android.net.Uri
 import com.hhmusic.data.HHMusicDatabase
+import com.hhmusic.data.entities.Album
+import com.hhmusic.data.entities.Artist
 import com.hhmusic.data.entities.Song
 import java.util.ArrayList
 import java.util.concurrent.Callable
@@ -97,6 +99,12 @@ class DBDataProvider: ContentProvider() {
                     val id = HHMusicDatabase.getInstance(context).songsDao()
                         .insert(Song.fromContentValues(values)).toLong()
 
+                    val id1 = HHMusicDatabase.getInstance(context).artistsDao()
+                        .insert(Artist.fromContentValues(values)).toLong()
+
+                    val id2 = HHMusicDatabase.getInstance(context).albumDao()
+                        .insert(Album.fromContentValues(values)).toLong()
+
                     context.contentResolver.notifyChange(uri, null)
                     return ContentUris.withAppendedId(uri, id)
                 }
@@ -119,6 +127,10 @@ class DBDataProvider: ContentProvider() {
                 val count = HHMusicDatabase.getInstance(context).songsDao()
                     .deleteById(ContentUris.parseId(uri))
 
+                val count1 = HHMusicDatabase.getInstance(context).artistsDao()
+                    .deleteById(ContentUris.parseId(uri))
+                val count2 = HHMusicDatabase.getInstance(context).albumDao()
+                    .deleteById(ContentUris.parseId(uri))
                 context.contentResolver.notifyChange(uri, null)
                 return count
             }
@@ -141,6 +153,12 @@ class DBDataProvider: ContentProvider() {
                     val count = HHMusicDatabase.getInstance(context).songsDao()
                         .update(song)
 
+                    val artist = Artist.fromContentValues(values)
+                    val count1 = HHMusicDatabase.getInstance(context).artistsDao()
+                        .update(artist)
+                    val album = Album.fromContentValues(values)
+                    val count2 = HHMusicDatabase.getInstance(context).albumDao()
+                        .update(album)
                     context.contentResolver.notifyChange(uri, null)
                     return count
                 }
@@ -174,11 +192,18 @@ class DBDataProvider: ContentProvider() {
                 val database = HHMusicDatabase.getInstance(context)
 
                 var songs: List<Song> = listOf() //arrayOfNulls<Song>(valuesArray.size)
+                var artists: List<Artist> = listOf() //arrayOfNulls<Song>(valuesArray.size)
+                var albums: List<Album> = listOf() //arrayOfNulls<Song>(valuesArray.size)
                 for (i in valuesArray.indices) {
                     //songs[i] = Song.fromContentValues(valuesArray[i])
                     songs += Song.fromContentValues(valuesArray[i])
+                    artists += Artist.fromContentValues(valuesArray[i])
+                    albums += Album.fromContentValues(valuesArray[i])
+
                 }
 
+                database.artistsDao().insertAll(artists).size
+                database.albumDao().insertAll(albums).size
                 return database.songsDao().insertAll(songs).size
             }
             ROUTE_ENTRIES_ID -> throw IllegalArgumentException("Invalid URI, cannot insert with ID: $uri")

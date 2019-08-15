@@ -6,9 +6,7 @@ import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
 import com.hhmusic.R
 import com.hhmusic.ui.activity.MainActivity
-import com.hhmusic.ui.fragment.PlaceholderFragment
-import com.hhmusic.ui.fragment.PlayListsFragment
-import com.hhmusic.ui.fragment.SongsFragment
+import com.hhmusic.ui.fragment.*
 
 private val TAB_TITLES = arrayOf(
     R.string.tab_text_playlist,
@@ -31,6 +29,8 @@ class SectionsPagerAdapter(private val context: MainActivity, fm: FragmentManage
         when (position) {
             0 -> return PlayListsFragment()
             1 -> return SongsFragment(context)
+            2 -> return ArtistsFragment(context)
+            3 -> return AlbumsFragment(context)
             else -> return PlaceholderFragment.newInstance(position + 1)
         }
         /*

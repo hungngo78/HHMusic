@@ -7,24 +7,22 @@ import androidx.room.RoomDatabase
 import androidx.sqlite.db.SupportSQLiteDatabase
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
-import com.hhmusic.data.dao.PlayListDAO
-import com.hhmusic.data.dao.SongsDAO
-import com.hhmusic.data.dao.PlayListSongJoinDAO
+import com.hhmusic.data.dao.*
+import com.hhmusic.data.entities.*
 
-import com.hhmusic.data.entities.PlayList
-import com.hhmusic.data.entities.Song
-import com.hhmusic.data.entities.PlayListSongJoin
 import com.hhmusic.workers.SeedDatabaseWorker
 
 /**
  * The Room database for this app
  */
-@Database(entities = [PlayList::class, Song::class, PlayListSongJoin::class], version = 1, exportSchema = false)
+@Database(entities = [PlayList::class, Song::class, PlayListSongJoin::class, Artist::class, Album::class], version = 1, exportSchema = false)
 abstract class HHMusicDatabase : RoomDatabase() {
 
     abstract fun playListDao(): PlayListDAO
     abstract fun songsDao(): SongsDAO
+    abstract fun artistsDao(): ArtistDAO
     abstract fun playListSongJoinDao(): PlayListSongJoinDAO
+    abstract fun albumDao() : AlbumDAO
 
     companion object {
 

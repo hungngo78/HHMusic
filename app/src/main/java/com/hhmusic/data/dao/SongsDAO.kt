@@ -14,17 +14,7 @@ interface SongsDAO {
     fun selectAll(): Cursor
 
     @Query("SELECT * FROM songs WHERE id = :songId")
-    fun selectById(songId: Long): Cursor
-
-    /*  for ViewModel*/
-    @Query("SELECT * FROM songs ORDER BY title")
-    fun selectAllSongs(): LiveData<List<Song>>
-
-    @Query("SELECT * FROM songs WHERE id = :songId")
-    fun selectSongById(songId: Long): Song
-
-
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun selectById(songId: Long): Cursor    @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(song: Song): Long
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
@@ -35,4 +25,14 @@ interface SongsDAO {
 
     @Query("DELETE FROM songs WHERE id = :songId")
     fun deleteById(songId: Long): Int
+
+    /*  for ViewModel*/
+    @Query("SELECT * FROM songs ORDER BY title")
+    fun selectAllSongs(): LiveData<List<Song>>
+
+    @Query("SELECT * FROM songs WHERE id = :songId")
+    fun selectSongById(songId: Long): Song
+
+
+
 }

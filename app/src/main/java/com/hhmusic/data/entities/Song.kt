@@ -17,7 +17,9 @@ data class Song(  @PrimaryKey @ColumnInfo(name = "id") var songId: Long = 0,
                     @ColumnInfo(name = "albumName") var albumName: String = "",
                     @ColumnInfo(name = "duration") var duration: Long = 0,
                     @ColumnInfo(name = "uriStr") var uriStr: String = "",
-                    @ColumnInfo(name = "imagePathStr") var imagePathStr: String = ""
+                    @ColumnInfo(name = "imagePathStr") var imagePathStr: String = "",
+                    @ColumnInfo(name = "artistId") var artistId: Long = 0,
+                    @ColumnInfo(name = "albumId") var albumId: Long = 0
 ) : Parcelable{
 
 
@@ -28,7 +30,9 @@ data class Song(  @PrimaryKey @ColumnInfo(name = "id") var songId: Long = 0,
         albumName = parcel.readString(),
         duration = parcel.readLong(),
         uriStr = parcel.readString(),
-        imagePathStr = parcel.readString()
+        imagePathStr = parcel.readString(),
+        artistId = parcel.readLong(),
+        albumId =  parcel.readLong()
     )
 
     override fun writeToParcel(dest: Parcel, flags: Int)  {
@@ -39,6 +43,8 @@ data class Song(  @PrimaryKey @ColumnInfo(name = "id") var songId: Long = 0,
         dest.writeLong(duration)
         dest.writeString(uriStr)
         dest.writeString(imagePathStr)
+        dest.writeLong(artistId)
+        dest.writeLong(albumId)
     }
 
     override fun describeContents() = 0
@@ -63,6 +69,12 @@ data class Song(  @PrimaryKey @ColumnInfo(name = "id") var songId: Long = 0,
                 if (values.containsKey("id")) {
                     song.songId = values.getAsLong("id")!!
                 }
+                if (values.containsKey("artistId")) {
+                    song.artistId = values.getAsLong("artistId")!!
+                }
+                if (values.containsKey("albumId")) {
+                    song.albumId = values.getAsLong("albumId")!!
+                }
                 if (values.containsKey("title")) {
                     song.title = values.getAsString("title")
                 }
@@ -81,6 +93,7 @@ data class Song(  @PrimaryKey @ColumnInfo(name = "id") var songId: Long = 0,
                 if (values.containsKey("imagePathStr")) {
                     song.imagePathStr = values.getAsString("imagePathStr")
                 }
+
 
                 return song
             //}

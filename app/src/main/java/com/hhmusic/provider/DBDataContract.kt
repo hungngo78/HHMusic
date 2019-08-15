@@ -52,6 +52,9 @@ class DBDataContract {
              val COLUMN_NAME_DURATION = "duration"
              val COLUMN_NAME_URI_STR = "uriStr"
              val COLUMN_NAME_IMAGE_PATH_STR = "imagePathStr"
+             val COLUMN_NAME_ENTRY_ARTIST_ID = "artistId"
+             val COLUMN_NAME_ENTRY_ALBUM_ID = "albumId"
+
         }
     }
 

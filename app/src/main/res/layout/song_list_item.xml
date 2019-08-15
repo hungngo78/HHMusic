@@ -14,40 +14,54 @@
     </data>
     <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="60dp"
+            android:layout_height="80dp"
+            android:foregroundGravity="center_vertical"
             android:onClick="@{clickListener}">
     >
+        <ImageView android:layout_width="60dp"
+                   android:layout_height="60dp"
+                   android:id="@+id/imageAlbum"
+                   app:layout_constraintTop_toTopOf="parent"
+                   android:src="@drawable/ic_tab_3"
+                   android:background="@android:color/darker_gray"
+                   app:layout_constraintRight_toLeftOf="@+id/title"
+
+                   android:layout_marginRight="10dp"
+                   app:layout_constraintStart_toStartOf="parent"/>
         <TextView
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:maxLines="2"
+                android:layout_marginLeft="10dp"
                 android:id="@+id/title"
                 android:text="@{songItem.title}"
                 android:contentDescription="title of song"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintStart_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/imageAlbum"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
                 style="@style/TitleItemList"
         />
-        <TextView android:layout_width="match_parent"
+        <TextView android:layout_width="0dp"
                   android:layout_height="wrap_content"
                   android:id="@+id/artist"
+                  android:layout_marginLeft="10dp"
                   android:maxLines="1"
+                  app:layout_constraintStart_toEndOf="@+id/imageAlbum"
                   android:text="@{songItem.artistName}"
                   app:layout_constraintTop_toBottomOf="@+id/title"
-                  app:layout_constraintStart_toStartOf="parent"
                   app:layout_constraintEnd_toEndOf="parent"
                   android:contentDescription="artist name"
                   style="@style/ContentItemList"
 
                     />
-        <TextView android:layout_width="match_parent"
+        <TextView android:layout_width="0dp"
                   android:layout_height="wrap_content"
                   android:id="@+id/duration"
+                  android:layout_marginLeft="10dp"
                   android:maxLines="1"
+                  app:layout_constraintStart_toEndOf="@+id/imageAlbum"
                   android:text="@{`` + songItem.durationFormat}"
                   app:layout_constraintTop_toBottomOf="@+id/artist"
-                  app:layout_constraintStart_toStartOf="parent"
                   app:layout_constraintEnd_toEndOf="parent"
                   android:contentDescription="artist name"
 
@@ -57,6 +71,7 @@
               app:layout_constraintTop_toBottomOf="@+id/duration"
               app:layout_constraintEnd_toEndOf="parent"
               android:layout_marginTop="8dp"
+              android:layout_marginBottom="8dp"
               android:background="@color/colorPrimaryDark"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>

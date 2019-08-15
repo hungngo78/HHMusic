@@ -44,7 +44,7 @@ class PlayerManager private constructor(
         }
     }
 
-    private fun initializePlayer() {
+    public fun initializePlayer() {
         player?:let{
             player = ExoPlayerFactory.newSimpleInstance(
                 context, DefaultRenderersFactory(context)
@@ -146,8 +146,8 @@ class PlayerManager private constructor(
     fun updateStartPosition() {
         if (player != null) {
             startAutoPlay = player?.getPlayWhenReady() ?: true
-            startWindow = player?.getCurrentWindowIndex() ?: 0
-            startPosition = Math.max(0, player?.getContentPosition()?:0)
+            startWindow = player?.getCurrentWindowIndex() ?: C.INDEX_UNSET
+            startPosition = Math.max(0, player?.getContentPosition() ?: C.TIME_UNSET)
         }
     }
 
@@ -159,7 +159,8 @@ class PlayerManager private constructor(
 
     fun releasePlayer() {
         if (player != null) {
-            updateStartPosition()
+            //updateStartPosition()
+            clearStartPosition()
 
             player?.release()
             player = null
