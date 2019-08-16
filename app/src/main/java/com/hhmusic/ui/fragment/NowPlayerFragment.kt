@@ -169,11 +169,6 @@ class NowPlayerFragment: Fragment(), PlaybackPreparer,
         playerManager?.play()
     }
 
-    private fun buildMediaSource(uri: Uri): MediaSource {
-        val dataSourceFactory = FileDataSourceFactory()
-        return ProgressiveMediaSource.Factory(dataSourceFactory).createMediaSource(uri)
-    }
-
     private fun updateStartPosition() {
         playerManager?.updateStartPosition()
     }

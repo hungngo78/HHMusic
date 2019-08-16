@@ -15,8 +15,13 @@ import com.google.android.material.navigation.NavigationView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import android.view.Menu
+import android.view.View
+import android.widget.ImageButton
+import android.widget.RelativeLayout
+import android.widget.TextView
 import android.widget.Toast
 import androidx.viewpager.widget.ViewPager
+import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.tabs.TabLayout
 import com.hhmusic.HHMusicApplication
 import com.hhmusic.R
@@ -26,12 +31,15 @@ import com.hhmusic.data.entities.Song
 import com.hhmusic.ui.fragment.NowPlayerFragment
 import com.hhmusic.utilities.PlayerManager
 import com.hhmusic.utilities.SyncUtils
+import kotlinx.android.synthetic.main.nav_header_main.view.*
 
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
     private lateinit var tabs: TabLayout
     private lateinit var mAccount: Account
+
+    private var playerManager : PlayerManager? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -61,9 +69,12 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         mAccount = SyncUtils.CreateSyncAccount(applicationContext)
         SyncUtils.TriggerRefresh(mAccount)
 
-        var playerManager = PlayerManager.getInstance(applicationContext, null)
+        // create instance of PlayerManager to play music
+        playerManager = PlayerManager.getInstance(applicationContext, null)
         (application as HHMusicApplication).setPlayerManager(playerManager)
     }
+
+
 
     val MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 123
 
@@ -151,15 +162,11 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
     fun setupTabicons() {
-
         tabs.getTabAt(0)?.setIcon(R.drawable.ic_tab_1)
         tabs.getTabAt(1)?.setIcon(R.drawable.ic_tab_2)
         tabs.getTabAt(2)?.setIcon(R.drawable.ic_tab_3)
         tabs.getTabAt(3)?.setIcon(R.drawable.ic_tab_4)
         tabs.getTabAt(4)?.setIcon(R.drawable.ic_tab_5)
-
-
-
     }
 
     override fun onBackPressed() {
@@ -181,7 +188,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         when (item.itemId) {
             // If the user clicks the "Setting" button.
             R.id.action_settings -> {
-                SyncUtils.TriggerRefresh(mAccount)
+                //SyncUtils.TriggerRefresh(mAccount)
                 return true
             }
             else -> return super.onOptionsItemSelected(item)
@@ -216,11 +223,36 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
     fun openPlayerScreen(intent: Intent) {
-
         intent?.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
 
         startActivity(intent)
+    }
 
+    fun setupMiniMusic(song: Song) {
+        /* mini music player */
+        val miniMusicView : View = findViewById(R.id.layout_mini_player)
+        miniMusicView?.let { miniMusic ->
+            miniMusicView.visibility = View.VISIBLE
+
+            val miniTitle: TextView = miniMusic.findViewById<View>(R.id.song_title) as TextView
+            miniTitle?.text = song.title
+
+            val miniArtist: TextView = miniMusic.findViewById<View>(R.id.artist) as TextView
+            miniArtist?.text = song.artistName
+
+            val miniPlayPauseBtn: ImageButton = miniMusicView?.findViewById<View>(R.id.play_pause) as ImageButton
+            miniPlayPauseBtn.setOnClickListener(View.OnClickListener {
+                var btn: ImageButton = it as ImageButton
+
+                if (playerManager?.isPlaying!!) {
+                    playerManager?.stop()
+                    btn.setImageResource(android.R.drawable.ic_media_play)
+                } else {
+                    playerManager?.retry()
+                    btn.setImageResource(android.R.drawable.ic_media_pause)
+                }
+            })
+        }
     }
 
     companion object {

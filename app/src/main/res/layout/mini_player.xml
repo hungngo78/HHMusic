@@ -1,38 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-    <RelativeLayout
-                    xmlns:android="http://schemas.android.com/apk/res/android"
-                    android:layout_width="match_parent"
-                    android:layout_height="60dp"
-                    android:id="@+id/mini_player"
-                    android:layout_alignParentBottom="true"
-                    android:background="@color/colorPrimaryDark"
-                    android:padding="5dp"
+<RelativeLayout android:id="@+id/mini_player"
+                xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:layout_alignParentBottom="true"
+                android:background="@color/colorPrimaryDark"
+                android:padding="5dp">
 
->
-        <ImageButton android:layout_width="50dp"
-                     android:layout_height="50dp"
-                     android:src="@android:drawable/ic_media_play"
-                     android:layout_centerVertical="true"
-                     android:layout_alignParentRight="true"
+    <ImageButton android:id="@+id/play_pause"
+                 android:layout_width="50dp"
+                 android:layout_height="50dp"
+                 android:src="@android:drawable/ic_media_pause"
+                 android:layout_centerVertical="true"
+                 android:layout_alignParentRight="true"/>
 
-                     android:id="@+id/playpause"/>
-        <TextView android:layout_width="match_parent" android:id="@+id/song_title"
-                  android:textColor="@android:color/white"
-                  android:paddingLeft="16dp"
-                  android:layout_toLeftOf="@+id/playpause"
-                  android:layout_height="wrap_content"
-                  android:textSize="18sp"
-                  android:layout_marginBottom="10dp"
-                  android:text="title"
-        />
-        <TextView android:layout_width="match_parent" android:id="@+id/artist"
-                  android:textColor="@android:color/darker_gray"
-                  android:layout_height="wrap_content"
-                  android:paddingLeft="16dp"
-                  android:text="artist"
-                  android:layout_below="@+id/song_title"/>
+    <TextView android:id="@+id/song_title"
+              android:layout_width="match_parent"
+              android:textColor="@android:color/white"
+              android:paddingLeft="16dp"
+              android:layout_toLeftOf="@+id/play_pause"
+              android:layout_height="wrap_content"
+              android:textSize="18sp"
+              android:layout_marginBottom="10dp"
+              android:text="title"/>
 
-    </RelativeLayout>
+    <TextView android:id="@+id/artist"
+              android:layout_width="match_parent"
+              android:textColor="@android:color/darker_gray"
+              android:layout_height="wrap_content"
+              android:paddingLeft="16dp"
+              android:text="artist"
+              android:layout_below="@+id/song_title"/>
+
+</RelativeLayout>
 
 

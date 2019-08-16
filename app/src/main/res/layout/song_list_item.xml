@@ -17,7 +17,7 @@
             android:layout_height="80dp"
             android:foregroundGravity="center_vertical"
             android:onClick="@{clickListener}">
-    >
+
         <ImageView android:layout_width="60dp"
                    android:layout_height="60dp"
                    android:id="@+id/imageAlbum"

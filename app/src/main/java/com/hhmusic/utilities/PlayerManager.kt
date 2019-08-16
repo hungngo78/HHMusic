@@ -25,8 +25,8 @@ class PlayerManager private constructor(
     private var startPosition: Long = C.TIME_UNSET
 
     var isPlaying: Boolean = false
-    get() = field
-    set(value) {field = value}
+    //get() = field
+    //set(value) {field = value}
 
     init {
         initializePlayer()

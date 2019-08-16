@@ -43,9 +43,8 @@ class SongsFragment(private val myActivity: MainActivity): Fragment() {
         binding.songListview.adapter = adapter
         subscribeUi()
         viewModel.getSongList()
+
         return binding.root
-
-
     }
 
     private fun subscribeUi() {

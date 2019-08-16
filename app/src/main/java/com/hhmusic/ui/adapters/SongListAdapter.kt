@@ -45,6 +45,10 @@ class SongListAdapter(private val myActivity: MainActivity): ListAdapter<Song, S
             //val bundle =  MainActivity.getIntent(it.context, ArrayList(songList), song.songId, position)
             val bundle =  MainActivity.getIntent(it.context, song)
             myActivity.openPlayerScreen(bundle)
+
+            // setup mini music
+            myActivity.setupMiniMusic(song)
+
             Toast.makeText(HHMusicApplication.applicationContext(), "Play song", Toast.LENGTH_SHORT).show()
         }
     }
