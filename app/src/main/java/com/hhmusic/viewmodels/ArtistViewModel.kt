@@ -19,13 +19,18 @@ class ArtistViewModel internal constructor(
 
     val mObserverArtistList = MediatorLiveData<List<Artist>>()
     val artistList = MutableLiveData<List<Artist>>()
-    //val songList : MutableLiveData<List<Song>> =  MutableLiveData<List<Song>>()
+    val songList : MutableLiveData<List<Song>> =  MutableLiveData<List<Song>>()
 
     init {
         var artistList = artistRepository.getArtistList()
         mObserverArtistList.addSource(artistList, mObserverArtistList::setValue)
     }
 
+    fun getSongListFromArtist(artistId : Long)  : LiveData<List<Song>> {
+
+        return artistRepository.getSongListFromArtist(artistId);
+
+    }
 
     fun getObserverArtistList(): LiveData<List<Artist>> {
         return mObserverArtistList;

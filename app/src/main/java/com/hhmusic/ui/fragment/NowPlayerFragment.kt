@@ -74,8 +74,12 @@ class NowPlayerFragment: Fragment(), PlaybackPreparer,
         binding = FragmentNowPlayerBinding.inflate(inflater, container, false)
 
 
+
+        val toolbar: Toolbar = binding.toolbar
+        toolbar.setTitle("Player");
         //binding= DataBindingUtil.inflate(inflater, R.layout.content_player, container, false)
         //binding = ContentPlayerBinding.inflate(inflater, container, false)
+
 
         playerManager = (activity?.application as HHMusicApplication).getPlayerManager()
         if (playerManager?.isPlaying!!) {
