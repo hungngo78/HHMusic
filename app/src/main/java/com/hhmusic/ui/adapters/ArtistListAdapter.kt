@@ -54,8 +54,6 @@ class ArtistListAdapter(private val myActivity: MainActivity): ListAdapter<Artis
 
     private fun createOnClickListener(artist: Artist, position: Int): View.OnClickListener {
         return View.OnClickListener {
-         //  val bundle =  MainActivity.getIntent(it.context, ArrayList(songList), song.songId, position)
-            //myActivity.openPlayerScreen(bundle)
 
             //get song list on Artist
             viewModel.getSongListFromArtist(artist.artistId).observe(myActivity, Observer{

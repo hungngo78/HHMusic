@@ -15,7 +15,7 @@ import com.hhmusic.ui.adapters.SongListAdapter
 
 
 
-class ArtistDetailFragment(private val myActivity: MainActivity, private val songList: ArrayList<Song>): DialogFragment() {
+class AlbumDetailFragment(private val myActivity: MainActivity, private val songList: ArrayList<Song>): DialogFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -27,7 +27,7 @@ class ArtistDetailFragment(private val myActivity: MainActivity, private val son
         var view = inflater.inflate(R.layout.dialog_fragment_detail, container, false)
 
        var toolbar = view.findViewById<Toolbar>(R.id.toolbar)
-        toolbar.setTitle("Artist Detail")
+        toolbar.setTitle("Album Detail")
         toolbar.setNavigationIcon(android.R.drawable.ic_menu_close_clear_cancel)
         toolbar.setNavigationOnClickListener(View.OnClickListener {
             view -> dismiss()

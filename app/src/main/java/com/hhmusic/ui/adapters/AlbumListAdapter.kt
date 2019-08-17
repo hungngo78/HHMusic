@@ -4,23 +4,30 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.hhmusic.HHMusicApplication
 import com.hhmusic.data.entities.Album
-import com.hhmusic.data.entities.Artist
-//import com.hhmusic.data.model.Song
-import com.hhmusic.data.entities.Song
 import com.hhmusic.databinding.AlbumListItemBinding
-import com.hhmusic.databinding.ArtistListItemBinding
-import com.hhmusic.databinding.SongListItemBinding
 import com.hhmusic.ui.activity.MainActivity
+import com.hhmusic.ui.fragment.AlbumDetailFragment
+import com.hhmusic.utilities.InjectorUtils
+import com.hhmusic.viewmodels.AlbumViewModel
 
 class AlbumListAdapter(private val myActivity: MainActivity): ListAdapter<Album, AlbumListAdapter.AlbumListViewHolder>(AlbumDiffCallback()) {
 
     lateinit var albumList: List<Album>;
+    lateinit  var viewModel: AlbumViewModel
 
+    init {
+        val factory = InjectorUtils.provideAlbumViewModelFactory(myActivity)
+        viewModel = ViewModelProviders.of(myActivity, factory).get(AlbumViewModel::class.java)
+
+
+    }
     fun setAlbumList(list : ArrayList<Album>){
         albumList = ArrayList(list)
     }
@@ -43,9 +50,19 @@ class AlbumListAdapter(private val myActivity: MainActivity): ListAdapter<Album,
 
     private fun createOnClickListener(album: Album, position: Int): View.OnClickListener {
         return View.OnClickListener {
-           // val bundle =  MainActivity.getIntent(it.context, ArrayList(songList), song.songId, position)
-            //myActivity.openPlayerScreen(bundle)
-            Toast.makeText(HHMusicApplication.applicationContext(), "Open SongList of  Artist", Toast.LENGTH_SHORT).show()
+            //get song list on Artist
+            viewModel.getObserverSongListFromAlbum(album.albumId).observe(myActivity, Observer{
+                    songList -> songList?.let {
+
+                var artistDetailFragment = AlbumDetailFragment(myActivity, ArrayList(it))
+                // myActivity.supportFragmentManager.beginTransaction().addToBackStack("artist detail").replace()
+                artistDetailFragment.show(myActivity.supportFragmentManager, "artist detail")
+
+                Toast.makeText(HHMusicApplication.applicationContext(), "Open SongList of  ALbum", Toast.LENGTH_SHORT).show()
+
+            }
+            })
+
         }
     }
 
