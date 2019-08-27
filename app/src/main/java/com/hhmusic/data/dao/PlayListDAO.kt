@@ -31,3 +31,4 @@ interface PlayListDAO {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertAll(playLists: List<PlayList>)
 }
+

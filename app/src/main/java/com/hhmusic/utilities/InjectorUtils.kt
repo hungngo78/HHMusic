@@ -24,6 +24,7 @@ object InjectorUtils {
     private fun getMusicRepository(context: Context): MusicRepository {
         return MusicRepository.getInstance(
             HHMusicDatabase.getInstance(context.applicationContext).playListDao(),
+            HHMusicDatabase.getInstance(context.applicationContext).playListSongJoinDao(),
             HHMusicDatabase.getInstance(context.applicationContext).songsDao(),
             HHMusicDatabase.getInstance(context.applicationContext).artistsDao(),
             HHMusicDatabase.getInstance(context.applicationContext).albumDao())

@@ -8,12 +8,13 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.hhmusic.databinding.FragmentPlayListBinding
+import com.hhmusic.ui.activity.MainActivity
 import com.hhmusic.ui.adapters.PlayListAdapter
 import com.hhmusic.utilities.InjectorUtils
 import com.hhmusic.viewmodels.PlayListViewModel
 
 
-class PlayListsFragment : Fragment() {
+class PlayListsFragment(private val myActivity: MainActivity) : Fragment() {
 
     private lateinit var viewModel: PlayListViewModel
     lateinit var binding: FragmentPlayListBinding
@@ -26,7 +27,7 @@ class PlayListsFragment : Fragment() {
         val factory = InjectorUtils.provideViewModelFactory(context)
         viewModel = ViewModelProviders.of(this, factory).get(PlayListViewModel::class.java)
 
-        mAdapter = PlayListAdapter()
+        mAdapter = PlayListAdapter(myActivity)
         binding.playListsView.adapter = mAdapter
 
         subscribeUi()
@@ -35,7 +36,7 @@ class PlayListsFragment : Fragment() {
     }
 
     private fun subscribeUi() {
-        viewModel.getPlants().observe(viewLifecycleOwner, Observer {playLists ->
+        viewModel.getPlayLists().observe(viewLifecycleOwner, Observer {playLists ->
             playLists?. let {
                 mAdapter.submitList(playLists)
             }

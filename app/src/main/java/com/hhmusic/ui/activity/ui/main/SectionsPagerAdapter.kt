@@ -27,7 +27,7 @@ class SectionsPagerAdapter(private val context: MainActivity, fm: FragmentManage
         // Return a PlaceholderFragment (defined as a static inner class below).
 
         when (position) {
-            0 -> return PlayListsFragment()
+            0 -> return PlayListsFragment(context)
             1 -> return SongsFragment(context)
             2 -> return ArtistsFragment(context)
             3 -> return AlbumsFragment(context)

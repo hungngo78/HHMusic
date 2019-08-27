@@ -17,7 +17,7 @@ class PlayerManager private constructor(
 ){
     private var player: SimpleExoPlayer? = null
 
-    private var songList: ArrayList<Song> = ArrayList()
+    private var songList: ArrayList<Song>? = null
     private var mediaSource: MediaSource? = null
 
     private var startAutoPlay: Boolean = true
@@ -76,7 +76,7 @@ class PlayerManager private constructor(
             songList = list
 
             var uris: ArrayList<Uri> = ArrayList()
-            for (s: Song in songList) {
+            for (s: Song in songList!!) {
                 var uri = Uri.parse(s?.uriStr)
                 uris.add(uri)
 

@@ -14,7 +14,9 @@ interface SongsDAO {
     fun selectAll(): Cursor
 
     @Query("SELECT * FROM songs WHERE id = :songId")
-    fun selectById(songId: Long): Cursor    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun selectById(songId: Long): Cursor
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(song: Song): Long
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
