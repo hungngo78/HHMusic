@@ -45,7 +45,7 @@ class PlayerActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         // set background color
-        //setTheme(com.hhmusic.R.style.PlayerTheme_Spherical)
+        setTheme(com.hhmusic.R.style.PlayerTheme_Spherical)
 
         super.onCreate(savedInstanceState)
         setContentView(com.hhmusic.R.layout.activity_player)

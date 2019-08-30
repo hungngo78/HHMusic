@@ -7,15 +7,10 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
-@Entity(tableName = "albums", primaryKeys = ["albumId","songId"])
 data class Album (
-    @ColumnInfo(name = "albumId")
     var albumId: Long = 0,
-    @ColumnInfo(name = "albumName")
     var albumName : String ="",
-    @ColumnInfo (name = "songId")
     var songId: Long =0,
-    @ColumnInfo (name = "imagePathStr")
     var albumeUrl: String = "",
     var numberOfTrack: Long = 0
 
@@ -49,33 +44,5 @@ data class Album (
             override fun createFromParcel(parcel: Parcel) = Album(parcel)
             override fun newArray(size: Int) = arrayOfNulls<Album>(size)
         }
-
-        /**
-         * Create a new [Song] from the specified [ContentValues].
-         *
-         * @param values A [ContentValues] that at least contain [.COLUMN_NAME].
-         * @return A newly created [Song] instance.
-         */
-        fun fromContentValues(values: ContentValues): Album {
-            //values?.let {
-            val album = Album()
-
-            if (values.containsKey("id")) {
-                album.songId = values.getAsLong("id")!!
-            }
-            if (values.containsKey("albumName")) {
-                album.albumName = values.getAsString("albumName")
-            }
-            if (values.containsKey("albumId")) {
-                album.albumId = values.getAsLong("albumId")
-            }
-            if (values.containsKey("imagePathStr")) {
-                album.albumeUrl = values.getAsString("imagePathStr")
-            }
-
-
-            return album
-        }
-
     }
 }

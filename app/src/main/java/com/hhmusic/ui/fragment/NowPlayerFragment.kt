@@ -38,7 +38,7 @@ import com.hhmusic.ui.activity.PlayerActivity
 import com.hhmusic.utilities.PlayerManager
 
 class NowPlayerFragment: Fragment(), PlaybackPreparer,
-                            PlayerControlView.VisibilityListener, View.OnClickListener {
+                            PlayerControlView.VisibilityListener { //, View.OnClickListener {
 
     companion object {
         val TAG = "Playing song fragment"
@@ -99,7 +99,9 @@ class NowPlayerFragment: Fragment(), PlaybackPreparer,
         }
 
 
-        binding.contentPlayer.addToPlaylist.setOnClickListener(this)
+        //binding.contentPlayer.addToPlaylist.setOnClickListener(this)
+        binding.contentPlayer.addPlayListOnClickListener = createAddPlayListListener()
+
 
         binding.contentPlayer.playerView.setControllerVisibilityListener(this)   // use the controller prev, next ...
         binding.contentPlayer.playerView.setControlDispatcher(PlayerControlDispatcher())  // detect the click event of exoplayer play/pause button
@@ -149,9 +151,16 @@ class NowPlayerFragment: Fragment(), PlaybackPreparer,
         outState.putLong(KEY_POSITION, startPosition)
     }
 
-    override fun onClick(view: View) {
-        playerManager?.togglePlayStop()
+    private fun createAddPlayListListener() : View.OnClickListener {
+        return View.OnClickListener {
+            var fragment = AddPlayListFragment(activity as PlayerActivity)
+            fragment.show(activity?.supportFragmentManager, "artist detail")
+        }
     }
+
+    //override fun onClick(view: View) {
+    //    playerManager?.togglePlayStop()
+    //}
 
 
     // PlaybackControlView.PlaybackPreparer implementation
@@ -263,6 +272,7 @@ class NowPlayerFragment: Fragment(), PlaybackPreparer,
     }
 
     private fun showToast(message: String) {
+        if (context != null)
         Toast.makeText(context, message, Toast.LENGTH_LONG).show()
     }
 

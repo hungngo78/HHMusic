@@ -89,7 +89,6 @@ class AlbumListAdapter(private val myActivity: MainActivity): ListAdapter<Album,
                     oldItem.albumName == newItem.albumName &&
                     oldItem.songId == newItem.songId &&
                     oldItem.numberOfTrack == newItem.numberOfTrack
-
         }
     }
 }

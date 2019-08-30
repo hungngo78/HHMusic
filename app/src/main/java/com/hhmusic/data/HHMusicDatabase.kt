@@ -15,7 +15,7 @@ import com.hhmusic.workers.SeedDatabaseWorker
 /**
  * The Room database for this app
  */
-@Database(entities = [PlayList::class, Song::class, PlayListSongJoin::class, Artist::class, Album::class], version = 1, exportSchema = false)
+@Database(entities = [PlayList::class, Song::class, PlayListSongJoin::class], version = 1, exportSchema = false)
 abstract class HHMusicDatabase : RoomDatabase() {
 
     abstract fun playListDao(): PlayListDAO

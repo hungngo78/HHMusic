@@ -23,6 +23,7 @@
                    android:id="@+id/imageAlbum"
                    app:layout_constraintTop_toTopOf="parent"
                    android:src="@drawable/ic_tab_3"
+                   android:scaleType="centerInside"
                    android:background="@android:color/darker_gray"
                    app:layout_constraintRight_toLeftOf="@+id/title"
 
