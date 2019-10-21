@@ -11,11 +11,13 @@ import androidx.recyclerview.widget.RecyclerView
 import com.hhmusic.R
 import com.hhmusic.data.entities.Song
 import com.hhmusic.ui.activity.MainActivity
+import com.hhmusic.ui.activity.PlayerActivity
+import com.hhmusic.ui.adapters.NowPlayingListAdapter
 import com.hhmusic.ui.adapters.SongListAdapter
 
 
 
-class AlbumDetailFragment(private val myActivity: MainActivity, private val songList: ArrayList<Song>): DialogFragment() {
+class NowPlayinglistFragment(private val myActivity: PlayerActivity, private val songList: ArrayList<Song>?): DialogFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -27,7 +29,7 @@ class AlbumDetailFragment(private val myActivity: MainActivity, private val song
         var view = inflater.inflate(R.layout.dialog_fragment_detail, container, false)
 
        var toolbar = view.findViewById<Toolbar>(R.id.toolbar)
-        toolbar.setTitle("Album Detail")
+        toolbar.setTitle("Playing Song list ")
         toolbar.setNavigationIcon(android.R.drawable.ic_menu_close_clear_cancel)
         toolbar.setNavigationOnClickListener(View.OnClickListener {
             view -> dismiss()
@@ -38,13 +40,14 @@ class AlbumDetailFragment(private val myActivity: MainActivity, private val song
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        var adapter =  SongListAdapter(myActivity)
-        adapter.setSongList(songList)
+        var adapter =  NowPlayingListAdapter(myActivity)
+        adapter.setSongList(songList!!)
         adapter.submitList(ArrayList(songList))
         var recyclerView = view.findViewById<RecyclerView>(R.id.songListview)
         recyclerView.adapter = adapter
 
         adapter.notifyDataSetChanged()
+
     }
 
 }

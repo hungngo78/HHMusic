@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/add_to_playlist"
+          android:title="Add to PlayList" />
+    <item android:id="@+id/go_to_album"
+          android:title="Go to Album" />
+    <item android:id="@+id/go_to_artist"
+          android:title="Go to Artist" />
+    <item android:id="@+id/delete"
+          android:title="Delete" />
+</menu>

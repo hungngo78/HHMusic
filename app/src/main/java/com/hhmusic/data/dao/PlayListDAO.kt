@@ -17,7 +17,7 @@ interface PlayListDAO {
      *
      */
     @Query("SELECT COUNT(*) FROM playLists")
-    abstract fun count(): Int
+    fun count(): Int
 
     @Query("SELECT * FROM playLists ORDER BY name")
     fun selectAll(): LiveData<List<PlayList>>
@@ -25,8 +25,11 @@ interface PlayListDAO {
     @Query("SELECT * FROM playLists WHERE id = :playListId")
     fun selectById(playListId: Long): PlayList
 
+    @Query("SELECT * FROM playLists WHERE name LIKE :playListName")
+    fun selectByName(playListName: String): List<PlayList>
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insert(playList: PlayList)
+    fun insert(playList: PlayList) : Long
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertAll(playLists: List<PlayList>)

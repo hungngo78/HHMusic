@@ -16,7 +16,7 @@ class PlayList(
     @ColumnInfo(name = "name") var name: String = ""
     @ColumnInfo(name = "isDefault") var default: Boolean = true
 
-    fun getImageUrl(): String?{
-        return "https://hungngobucket1.s3-us-west-1.amazonaws.com/Production/1000/Black+Sunflower/image1.jpg"
-    }
+    //fun getImageUrl(): String?{
+    //    return "https://hungngobucket1.s3-us-west-1.amazonaws.com/Production/1000/Black+Sunflower/image1.jpg"
+    //}
 }

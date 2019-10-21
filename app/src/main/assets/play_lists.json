@@ -1,5 +1,9 @@
 [
   {
+    "name": "My Playlist",
+    "isDefault": true
+  },
+  {
     "name": "Favorites",
     "isDefault": true
   },
@@ -9,14 +13,6 @@
   },
   {
     "name": "Recently played",
-    "isDefault": true
-  },
-  {
-    "name": "Newly added",
-    "isDefault": true
-  },
-  {
-    "name": "My playlist",
     "isDefault": true
   }
 ]

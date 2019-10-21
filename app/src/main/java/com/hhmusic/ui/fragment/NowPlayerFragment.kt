@@ -71,15 +71,13 @@ class NowPlayerFragment: Fragment(), PlaybackPreparer,
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
         //val viewRoot = inflater.inflate(R.layout.fragment_now_player, container, false)
+
+        //binding= DataBindingUtil.inflate(inflater, R.layout.content_player, container, false)
+        //binding = ContentPlayerBinding.inflate(inflater, container, false)
         binding = FragmentNowPlayerBinding.inflate(inflater, container, false)
-
-
 
         val toolbar: Toolbar = binding.toolbar
         toolbar.setTitle("Player");
-        //binding= DataBindingUtil.inflate(inflater, R.layout.content_player, container, false)
-        //binding = ContentPlayerBinding.inflate(inflater, container, false)
-
 
         playerManager = (activity?.application as HHMusicApplication).getPlayerManager()
         if (playerManager?.isPlaying!!) {
@@ -101,8 +99,7 @@ class NowPlayerFragment: Fragment(), PlaybackPreparer,
 
         //binding.contentPlayer.addToPlaylist.setOnClickListener(this)
         binding.contentPlayer.addPlayListOnClickListener = createAddPlayListListener()
-
-
+        binding.contentPlayer.clickListener = createNowPlayingListListener()
         binding.contentPlayer.playerView.setControllerVisibilityListener(this)   // use the controller prev, next ...
         binding.contentPlayer.playerView.setControlDispatcher(PlayerControlDispatcher())  // detect the click event of exoplayer play/pause button
         binding.contentPlayer.playerView.setErrorMessageProvider(PlayerErrorMessageProvider())
@@ -153,11 +150,16 @@ class NowPlayerFragment: Fragment(), PlaybackPreparer,
 
     private fun createAddPlayListListener() : View.OnClickListener {
         return View.OnClickListener {
-            var fragment = AddPlayListFragment(activity as PlayerActivity)
+            var fragment = AddPlayListFragment(activity as PlayerActivity, mSong!!)
             fragment.show(activity?.supportFragmentManager, "artist detail")
         }
     }
-
+    private fun createNowPlayingListListener() : View.OnClickListener {
+        return View.OnClickListener {
+            var fragment = NowPlayinglistFragment(activity as PlayerActivity, playerManager?.getSongList() )
+            fragment.show(activity?.supportFragmentManager, "Now Playing list ")
+        }
+    }
     //override fun onClick(view: View) {
     //    playerManager?.togglePlayStop()
     //}

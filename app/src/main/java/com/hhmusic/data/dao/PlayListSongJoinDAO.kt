@@ -4,6 +4,7 @@ import android.database.Cursor
 import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Insert
+import androidx.room.OnConflictStrategy
 import androidx.room.Query
 
 
@@ -15,7 +16,7 @@ import com.hhmusic.data.entities.PlayListSongJoin;
 
 @Dao
 interface PlayListSongJoinDAO {
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(playListSongJoin: PlayListSongJoin)
 
     @Query("select p.* from playLists p, playList_song_join j where p.id=j.playListId AND j.songId=:songId")
@@ -23,4 +24,8 @@ interface PlayListSongJoinDAO {
 
     @Query("select s.* from songs s, playList_song_join j where s.id = j.songId and j.playListId= :playListId")
     fun getSongsForPlayList(playListId: Long): LiveData<List<Song>>
+
+    // to check if a song has been inserted into a playlist already
+    @Query("select * from playList_song_join j where j.playListId= :playListId and j.songId = :songId")
+    fun getRecordByPlayListIdAndSongId(playListId: Long, songId: Long): PlayListSongJoin
 }
