@@ -45,7 +45,6 @@ class NowPlayingListAdapter(private val myActivity: PlayerActivity): ListAdapter
 
         val metaRetriver = MediaMetadataRetriever()
         metaRetriver.setDataSource(myActivity, Uri.parse(song.uriStr))
-        System.out.println(song.uriStr)
         val picArray = metaRetriver.embeddedPicture
 
         var songImage : Bitmap? = null;
@@ -53,7 +52,6 @@ class NowPlayingListAdapter(private val myActivity: PlayerActivity): ListAdapter
             songImage = BitmapFactory.decodeByteArray(picArray, 0, picArray.size)
         }
         holder.apply {
-           // bind(createOnClickListener(song, position), song, songImage)
             bind(createOnClickListener(song, position), song, songImage)
             itemView.tag = song
         }
@@ -63,7 +61,12 @@ class NowPlayingListAdapter(private val myActivity: PlayerActivity): ListAdapter
     private fun createOnClickListener(song: Song, position: Int): View.OnClickListener {
         return View.OnClickListener {
             var playerManager = (myActivity.application as HHMusicApplication).getPlayerManager()
-            playerManager?.setSongList(ArrayList(songList))
+           // playerManager?.setSongList(ArrayList(songList), position)
+            if(position != playerManager?.getPlayer()?.currentAdGroupIndex) {
+                playerManager?.setCurrentSong(position)
+                playerManager?.stop()
+                playerManager?.play()
+            }
 
             Toast.makeText(HHMusicApplication.applicationContext(), "Play song", Toast.LENGTH_SHORT).show()
         }
@@ -76,7 +79,6 @@ class NowPlayingListAdapter(private val myActivity: PlayerActivity): ListAdapter
              binding.apply {
                  clickListener = listener
                  songItem = item
-               //  binding.imageAlbum.setImageURI(Uri.parse(item.imagePathStr))
                  if(artwork!= null)
                      binding.imageAlbum.setImageBitmap(artwork)
                  else {

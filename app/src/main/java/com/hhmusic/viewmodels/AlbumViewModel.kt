@@ -27,11 +27,10 @@ class AlbumViewModel internal constructor(
         mObserverAlbumtList.addSource(albumList, mObserverAlbumtList::setValue)
     }
 
-
     fun getObserverSongListFromAlbum(albumId: Long) : LiveData<List<Song>> {
-
        return  albumRepository.getSongListFromAlbum(albumId)
     }
+
     fun getObserverAlbumList(): LiveData<List<Album>> {
         return mObserverAlbumtList;
     }

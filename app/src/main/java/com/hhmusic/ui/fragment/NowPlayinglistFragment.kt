@@ -46,6 +46,13 @@ class NowPlayinglistFragment(private val myActivity: PlayerActivity, private val
         var recyclerView = view.findViewById<RecyclerView>(R.id.songListview)
         recyclerView.adapter = adapter
 
+        recyclerView.setOnClickListener(object : View.OnClickListener {
+
+            override fun onClick(v: View?) {
+               dismiss()
+            }
+
+        })
         adapter.notifyDataSetChanged()
 
     }

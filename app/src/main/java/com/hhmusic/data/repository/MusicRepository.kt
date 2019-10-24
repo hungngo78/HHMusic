@@ -54,6 +54,14 @@ class MusicRepository private constructor(private val playListDao: PlayListDAO,
         /* SONG */
         fun getSongList() = songsDao.selectAllSongs()
         fun getSong(songId: Long) = songsDao.selectSongById(songId)
+        fun removeSong(songId: Long) : Int {
+            playListSongJoinDao.deleteBySongId(songId)
+
+            var result: Int = 0
+            result = songsDao.deleteById(songId)
+            
+            return result
+        }
 
         /* Artist */
         fun getArtistList() = artistDao.getAllArtistTrackSong()

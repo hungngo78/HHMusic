@@ -12,15 +12,7 @@ object InjectorUtils {
         val repository = getMusicRepository(context)
         return ViewModelFactory(repository)
     }
-    fun provideArtistViewModelFactory(context: Context): ArtistViewModelFactory {
-        val repository = getMusicRepository(context)
-        return ArtistViewModelFactory(repository)
-    }
 
-    fun provideAlbumViewModelFactory(context: Context): AlbumViewModelFactory {
-        val repository = getMusicRepository(context)
-        return AlbumViewModelFactory(repository)
-    }
     private fun getMusicRepository(context: Context): MusicRepository {
         return MusicRepository.getInstance(
             HHMusicDatabase.getInstance(context.applicationContext).playListDao(),

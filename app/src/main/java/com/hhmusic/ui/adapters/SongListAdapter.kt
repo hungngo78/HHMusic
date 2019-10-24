@@ -14,17 +14,41 @@ import com.hhmusic.databinding.SongListItemBinding
 import com.hhmusic.ui.activity.MainActivity
 import android.graphics.BitmapFactory
 import android.graphics.Bitmap
-import android.media.MediaMetadataRetriever
 import android.widget.PopupMenu;
 import android.R
 import android.view.MenuItem
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
 import com.hhmusic.ui.fragment.AddPlayListFragment
+import com.hhmusic.ui.fragment.AlbumDetailFragment
+import com.hhmusic.ui.fragment.ArtistDetailFragment
+import com.hhmusic.utilities.InjectorUtils
+import com.hhmusic.utilities.MediaStoreUtils
+import com.hhmusic.viewmodels.AlbumViewModel
+import com.hhmusic.viewmodels.ArtistViewModel
+import com.hhmusic.viewmodels.SongViewModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 
 class SongListAdapter(private val myActivity: MainActivity):
                                         ListAdapter<Song, SongListAdapter.SongListViewHolder>(SongDiffCallback()) {
 
-    lateinit var songList: List<Song>;
+    lateinit var songList: List<Song>
+
+    private var albumViewModel: AlbumViewModel
+    private var artistViewModel: ArtistViewModel
+    private var songViewModel: SongViewModel
+
+    init {
+        val factory = InjectorUtils.provideViewModelFactory(myActivity)
+
+        albumViewModel = ViewModelProviders.of(myActivity, factory).get(AlbumViewModel::class.java)
+        artistViewModel = ViewModelProviders.of(myActivity, factory).get(ArtistViewModel::class.java)
+        songViewModel = ViewModelProviders.of(myActivity, factory).get(SongViewModel::class.java)
+    }
 
     fun setSongList(list : ArrayList<Song>){
         songList = ArrayList(list)
@@ -46,25 +70,24 @@ class SongListAdapter(private val myActivity: MainActivity):
 //        System.out.println("uri = " +uri.path)
 //
 //        // Way 1: load cover art -> ok
-//        song.imagePathStr = "content://media/external/audio/media/" + song.songId + "/albumart"
+        song.imagePathStr = "content://media/external/audio/media/" + song.songId + "/albumart"
 
-//        val res = myActivity.getContentResolver()
-//        val inputStream = res.openInputStream(Uri.parse(song.imagePathStr))
-//        val songImage = BitmapFactory.decodeStream(inputStream)
+        val res = myActivity.getContentResolver()
+        val inputStream = res.openInputStream(Uri.parse(song.imagePathStr))
+        val songImage = BitmapFactory.decodeStream(inputStream)
 
-
+        /*
         // Way 2: load cover art -> ok
-
-        val metaRetriver = MediaMetadataRetriever()
-
-        metaRetriver.setDataSource(myActivity, Uri.parse(song.uriStr))
-        //System.out.println(song.uriStr)
-        val picArray = metaRetriver.embeddedPicture
-
-        var songImage : Bitmap? = null;
-        if (picArray!= null) {
-            songImage = BitmapFactory.decodeByteArray(picArray, 0, picArray.size)
-        }
+//        val metaRetriver = MediaMetadataRetriever()
+//
+//        metaRetriver.setDataSource(myActivity, Uri.parse(song.uriStr))
+//        //System.out.println(song.uriStr)
+//        val picArray = metaRetriver.embeddedPicture
+//
+//        var songImage : Bitmap? = null;
+//        if (picArray!= null) {
+//            songImage = BitmapFactory.decodeByteArray(picArray, 0, picArray.size)
+//        }*/
 
         holder.apply {
            // bind(createOnClickListener(song, position), song, songImage)
@@ -88,13 +111,41 @@ class SongListAdapter(private val myActivity: MainActivity):
 
                         true
                     } else if (i == com.hhmusic.R.id.go_to_album) {
-                        //do something
+                        // get all songs of this album, and open Album Detail Fragment
+                        albumViewModel.getObserverSongListFromAlbum(song.albumId).observe(myActivity, Observer {
+                            var albumDetailFragment = AlbumDetailFragment(myActivity, ArrayList(it))
+
+                            // myActivity.supportFragmentManager.beginTransaction().addToBackStack("artist detail").replace()
+                            albumDetailFragment.show(myActivity.supportFragmentManager, "album detail")
+                        })
+
                         true
                     } else if (i == com.hhmusic.R.id.go_to_artist) {
-                        //do something
+                        // get all songs of this artist, and open Album Detail Fragment
+                        artistViewModel.getSongListFromArtist(song.artistId).observe(myActivity, Observer {
+                            var artistDetailFragment = ArtistDetailFragment(myActivity, ArrayList(it))
+
+                            // myActivity.supportFragmentManager.beginTransaction().addToBackStack("artist detail").replace()
+                            artistDetailFragment.show(myActivity.supportFragmentManager, "artist detail")
+                        })
+
                         true
                     } else if (i == com.hhmusic.R.id.delete) {
-                        //do something
+                        GlobalScope.launch () {
+                            // update DB
+                            var result = songViewModel.removeSong(song.songId)
+
+                            withContext(Dispatchers.Main) {
+                                if (result > 0) {
+                                    // no need to callback to fragment for updating UI
+                                    //  because the songlist in DB has been already observed by fragment
+
+                                    // delete song on sd card
+                                    MediaStoreUtils.deleteFromMediaStore(song.uriStr, myActivity)
+                                }
+                            }
+                        }
+
                         true
                     } else {
                         onMenuItemClick(item)
@@ -107,10 +158,11 @@ class SongListAdapter(private val myActivity: MainActivity):
         }
     }
 
-    private fun createOnClickListener(song: Song, position: Int): View.OnClickListener {
+     private fun createOnClickListener(song: Song, position: Int): View.OnClickListener {
         return View.OnClickListener {
             var playerManager = (myActivity.application as HHMusicApplication).getPlayerManager()
-            playerManager?.setSongList(ArrayList(songList))
+            playerManager?.removeMediaSource()
+            playerManager?.setSongList(ArrayList(songList), position)
 
             //val bundle =  MainActivity.getIntent(it.context, ArrayList(songList), song.songId, position)
             val bundle =  MainActivity.getIntent(it.context, song)
@@ -136,7 +188,7 @@ class SongListAdapter(private val myActivity: MainActivity):
                  if(artwork!= null)
                      binding.imageAlbum.setImageBitmap(artwork)
                  else {
-                     binding.imageAlbum.setImageResource(com.hhmusic.R.drawable.ic_tab_2)
+                     binding.imageAlbum.setImageBitmap(null)
                  }
                  executePendingBindings()
              }

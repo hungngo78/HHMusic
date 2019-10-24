@@ -20,6 +20,10 @@ class ViewModelFactory (
                     return SongViewModel(repository) as T
                 } else if (modelClass.simpleName.equals("PlayListViewModel")) {
                     return PlayListViewModel(repository) as T
+                } else if (modelClass.simpleName.equals("AlbumViewModel")) {
+                    return AlbumViewModel(repository) as T
+                } else if (modelClass.simpleName.equals("ArtistViewModel")) {
+                    return ArtistViewModel(repository) as T
                 }
             } catch (e: InstantiationException) {
                 throw RuntimeException("Cannot create an instance of $modelClass", e)

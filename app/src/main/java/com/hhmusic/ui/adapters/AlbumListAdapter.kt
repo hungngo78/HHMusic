@@ -24,19 +24,16 @@ class AlbumListAdapter(private val myActivity: MainActivity): ListAdapter<Album,
     lateinit  var viewModel: AlbumViewModel
 
     init {
-        val factory = InjectorUtils.provideAlbumViewModelFactory(myActivity)
+        val factory = InjectorUtils.provideViewModelFactory(myActivity)
         viewModel = ViewModelProviders.of(myActivity, factory).get(AlbumViewModel::class.java)
-
-
     }
+
     fun setAlbumList(list : ArrayList<Album>){
         albumList = ArrayList(list)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AlbumListViewHolder {
-
         return  AlbumListViewHolder(AlbumListItemBinding.inflate(LayoutInflater.from(parent.context), parent, false ))
-
     }
 
     override fun onBindViewHolder(holder: AlbumListAdapter.AlbumListViewHolder, position: Int) {
@@ -55,9 +52,9 @@ class AlbumListAdapter(private val myActivity: MainActivity): ListAdapter<Album,
             viewModel.getObserverSongListFromAlbum(album.albumId).observe(myActivity, Observer{
                     songList -> songList?.let {
 
-                var artistDetailFragment = AlbumDetailFragment(myActivity, ArrayList(it))
+                var albumDetailFragment = AlbumDetailFragment(myActivity, ArrayList(it))
                 // myActivity.supportFragmentManager.beginTransaction().addToBackStack("artist detail").replace()
-                artistDetailFragment.show(myActivity.supportFragmentManager, "artist detail")
+                albumDetailFragment.show(myActivity.supportFragmentManager, "album detail")
 
                 Toast.makeText(HHMusicApplication.applicationContext(), "Open SongList of  ALbum", Toast.LENGTH_SHORT).show()
             }

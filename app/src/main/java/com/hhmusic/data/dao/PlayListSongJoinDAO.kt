@@ -28,4 +28,7 @@ interface PlayListSongJoinDAO {
     // to check if a song has been inserted into a playlist already
     @Query("select * from playList_song_join j where j.playListId= :playListId and j.songId = :songId")
     fun getRecordByPlayListIdAndSongId(playListId: Long, songId: Long): PlayListSongJoin
+
+    @Query("DELETE FROM playList_song_join WHERE songId = :songId")
+    fun deleteBySongId(songId: Long) : Int
 }

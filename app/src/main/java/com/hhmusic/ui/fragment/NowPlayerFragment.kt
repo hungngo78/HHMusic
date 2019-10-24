@@ -83,14 +83,13 @@ class NowPlayerFragment: Fragment(), PlaybackPreparer,
         if (playerManager?.isPlaying!!) {
             releasePlayer()
             playerManager?.isPlaying = false
-
             playerManager?.initializePlayer()
         }
 
         mSong?.let {
-            var songList: ArrayList<Song> = ArrayList()
-            songList.add(mSong!!)
-            playerManager?.setSongList(songList)
+//            var songList: ArrayList<Song> = ArrayList()
+//            songList.add(mSong!!)
+//            playerManager?.setSongList(songList)
 
             // bind song object onto UI
             binding.contentPlayer.songItem = mSong
@@ -236,6 +235,8 @@ class NowPlayerFragment: Fragment(), PlaybackPreparer,
         }
 
         override fun onTracksChanged(trackGroups: TrackGroupArray?, trackSelections: TrackSelectionArray?) {
+            if(binding!=null && binding.contentPlayer!= null && playerManager!=null)
+               binding.contentPlayer.songItem = playerManager?.getSongList()?.get(playerManager?.getPlayer()?.currentWindowIndex?:0)
         }
     }
 
@@ -277,5 +278,7 @@ class NowPlayerFragment: Fragment(), PlaybackPreparer,
         if (context != null)
         Toast.makeText(context, message, Toast.LENGTH_LONG).show()
     }
+
+
 
 }

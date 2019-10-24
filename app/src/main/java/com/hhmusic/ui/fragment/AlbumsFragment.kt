@@ -29,7 +29,7 @@ class AlbumsFragment(private val myActivity: MainActivity): Fragment() {
 
         val context = context ?: return binding.root
 
-        val factory = InjectorUtils.provideAlbumViewModelFactory(context)
+        val factory = InjectorUtils.provideViewModelFactory(context)
         viewModel = ViewModelProviders.of(this, factory).get(AlbumViewModel::class.java)
 
         binding = FragmentAlbumListBinding.inflate(inflater,container, false)

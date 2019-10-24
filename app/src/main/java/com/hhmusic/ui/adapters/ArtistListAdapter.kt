@@ -23,13 +23,11 @@ import com.hhmusic.viewmodels.ArtistViewModel
 class ArtistListAdapter(private val myActivity: MainActivity): ListAdapter<Artist, ArtistListAdapter.ArtistListViewHolder>(ArtistDiffCallback()) {
 
     lateinit var artistList: List<Artist>;
-    lateinit  var viewModel: ArtistViewModel
+    private var viewModel: ArtistViewModel
 
     init {
-        val factory = InjectorUtils.provideArtistViewModelFactory(myActivity)
+        val factory = InjectorUtils.provideViewModelFactory(myActivity)
         viewModel = ViewModelProviders.of(myActivity, factory).get(ArtistViewModel::class.java)
-
-
     }
 
     fun setArtistList(list : ArrayList<Artist>){
@@ -37,9 +35,7 @@ class ArtistListAdapter(private val myActivity: MainActivity): ListAdapter<Artis
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ArtistListViewHolder {
-
         return  ArtistListViewHolder(ArtistListItemBinding.inflate(LayoutInflater.from(parent.context), parent, false ))
-
     }
 
     override fun onBindViewHolder(holder: ArtistListAdapter.ArtistListViewHolder, position: Int) {
@@ -58,17 +54,13 @@ class ArtistListAdapter(private val myActivity: MainActivity): ListAdapter<Artis
             //get song list on Artist
             viewModel.getSongListFromArtist(artist.artistId).observe(myActivity, Observer{
                 songList -> songList?.let {
+                    var artistDetailFragment = ArtistDetailFragment(myActivity, ArrayList(it))
+                    // myActivity.supportFragmentManager.beginTransaction().addToBackStack("artist detail").replace()
+                    artistDetailFragment.show(myActivity.supportFragmentManager, "artist detail")
 
-                var artistDetailFragment = ArtistDetailFragment(myActivity, ArrayList(it))
-                // myActivity.supportFragmentManager.beginTransaction().addToBackStack("artist detail").replace()
-                artistDetailFragment.show(myActivity.supportFragmentManager, "artist detail")
-
-                Toast.makeText(HHMusicApplication.applicationContext(), "Open SongList of  Artist", Toast.LENGTH_SHORT).show()
-
-             }
+                    Toast.makeText(HHMusicApplication.applicationContext(), "Open SongList of  Artist", Toast.LENGTH_SHORT).show()
+                }
             })
-
-
         }
     }
 

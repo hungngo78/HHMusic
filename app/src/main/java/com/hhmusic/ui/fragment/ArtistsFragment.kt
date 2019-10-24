@@ -29,7 +29,7 @@ class ArtistsFragment(private val myActivity: MainActivity): Fragment() {
 
         val context = context ?: return binding.root
 
-        val factory = InjectorUtils.provideArtistViewModelFactory(context)
+        val factory = InjectorUtils.provideViewModelFactory(context)
         viewModel = ViewModelProviders.of(this, factory).get(ArtistViewModel::class.java)
 
         binding = FragmentArtistListBinding.inflate(inflater,container, false)

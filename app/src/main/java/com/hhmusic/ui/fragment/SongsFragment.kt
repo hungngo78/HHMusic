@@ -38,11 +38,9 @@ class SongsFragment(private val myActivity: MainActivity): Fragment() {
         binding = FragmentSongListBinding.inflate(inflater,container, false)
 //        val context = context ?: return binding.root
 
-
         adapter = SongListAdapter(myActivity)
         binding.songListview.adapter = adapter
         subscribeUi()
-        viewModel.getSongList()
 
         return binding.root
     }
@@ -51,10 +49,10 @@ class SongsFragment(private val myActivity: MainActivity): Fragment() {
         viewModel.getObserverSongList().observe(viewLifecycleOwner, Observer {
 
             songs -> if(songs != null) {
-            adapter.submitList(songs)
-            adapter.setSongList(ArrayList(songs))
-            //binding.adapter = adapter
-            binding.songListview.adapter = adapter
+                adapter.submitList(songs)
+                adapter.setSongList(ArrayList(songs))
+                //binding.adapter = adapter
+                binding.songListview.adapter = adapter
             }
         })
     }
