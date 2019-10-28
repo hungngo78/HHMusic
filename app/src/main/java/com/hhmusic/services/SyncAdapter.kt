@@ -7,12 +7,12 @@ import android.os.Bundle
 import android.util.Log
 import com.hhmusic.provider.DBDataContract
 import java.io.IOException
-import java.util.ArrayList
-import java.util.HashMap
 import android.net.Uri
 import android.os.RemoteException
 import android.provider.MediaStore
 import com.hhmusic.data.entities.Song
+import java.util.*
+import java.util.concurrent.TimeUnit
 
 class SyncAdapter @JvmOverloads constructor(
     context: Context,

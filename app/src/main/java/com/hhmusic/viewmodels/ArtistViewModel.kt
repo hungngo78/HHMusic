@@ -1,14 +1,9 @@
 package com.hhmusic.viewmodels
 
-import android.database.Cursor
-import android.net.Uri
-import android.provider.MediaStore
 import androidx.lifecycle.*
-import com.hhmusic.HHMusicApplication
 //import com.hhmusic.data.model.Song
 import com.hhmusic.data.entities.Song
-import android.content.ContentUris
-import com.hhmusic.data.entities.Artist
+import com.hhmusic.data.model.Artist
 import com.hhmusic.data.repository.MusicRepository
 
 

@@ -15,11 +15,13 @@ import com.hhmusic.data.entities.Song
 import com.hhmusic.databinding.PlayListItemBinding
 import com.hhmusic.ui.activity.MainActivity
 import com.hhmusic.ui.fragment.PlayListDetailFragment
+import com.hhmusic.utilities.HHMusicConstants
 import com.hhmusic.utilities.InjectorUtils
 import com.hhmusic.viewmodels.PlayListViewModel
 
 
-class PlayListAdapter (private val myActivity: MainActivity) : ListAdapter<PlayList, PlayListAdapter.PlayListViewHolder>(PlayListDiffCallback()) {
+class PlayListAdapter (private val myActivity: MainActivity) :
+                            ListAdapter<PlayList, PlayListAdapter.PlayListViewHolder>(PlayListDiffCallback()) {
 
     lateinit  var viewModel: PlayListViewModel
 
@@ -42,18 +44,29 @@ class PlayListAdapter (private val myActivity: MainActivity) : ListAdapter<PlayL
     private fun createOnClickListener(playList: PlayList): View.OnClickListener {
         return View.OnClickListener {
             //Toast.makeText(HHMusicApplication.applicationContext(), "Play song", Toast.LENGTH_SHORT).show()
-            viewModel.getSongsByPlayList(playList.playListId).observe(myActivity,  Observer {
+            var observer: Observer<List<Song>> = Observer {
                 it?.let {
                     if (it.size > 0) {
                         var playListDetailFragment = PlayListDetailFragment(myActivity, ArrayList(it))
-                        playListDetailFragment.show(myActivity.supportFragmentManager, "artist detail")
+                        playListDetailFragment.show(myActivity.supportFragmentManager, "playlist detail")
                     } else
-                        Toast.makeText(HHMusicApplication.applicationContext(), "Playlist has 0 song", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(
+                            HHMusicApplication.applicationContext(),
+                            "Playlist has 0 song",
+                            Toast.LENGTH_SHORT
+                        ).show()
                 }
-            })
+            }
+
+            if (playList.name.equals(HHMusicConstants.RECENTLY_PLAYED_PLAYLIST)) {  // handle recently play
+                viewModel.getRecentlyPlayedSongs().observe(myActivity, observer)
+            } else if (playList.name.equals(HHMusicConstants.MOST_PLAYED_PLAYLIST)) {  // handle most play
+                viewModel.getMostPlayedSongs().observe(myActivity, observer)
+            } else {
+                viewModel.getSongsByPlayList(playList.playListId).observe(myActivity, observer)
+            }
         }
     }
-
 
     class PlayListViewHolder(private val binding: PlayListItemBinding): RecyclerView.ViewHolder(binding.root) {
         fun bind(listener: View.OnClickListener, item: PlayList) {

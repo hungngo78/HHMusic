@@ -1,11 +1,7 @@
-package com.hhmusic.data.entities
+package com.hhmusic.data.model
 
-import android.content.ContentValues
 import android.os.Parcel
 import android.os.Parcelable
-import androidx.room.ColumnInfo
-import androidx.room.Entity
-import androidx.room.PrimaryKey
 
 data class Artist (
     var artistId: Long = 0,

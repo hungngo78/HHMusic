@@ -4,8 +4,6 @@ import android.content.*
 import android.database.Cursor
 import android.net.Uri
 import com.hhmusic.data.HHMusicDatabase
-import com.hhmusic.data.entities.Album
-import com.hhmusic.data.entities.Artist
 import com.hhmusic.data.entities.Song
 import java.util.ArrayList
 import java.util.concurrent.Callable

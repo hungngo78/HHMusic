@@ -7,7 +7,7 @@
         <variable name="isLoading"
                   type="boolean"/>
         <variable name="albumItem"
-                  type="com.hhmusic.data.entities.Album"/>
+                  type="com.hhmusic.data.model.Album"/>
         <variable
                 name="clickListener"
                 type="android.view.View.OnClickListener"/>

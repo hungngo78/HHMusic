@@ -8,6 +8,8 @@ import com.hhmusic.utilities.HHMusicConstants
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import java.util.*
+import java.util.concurrent.TimeUnit
 
 //@SuppressLint("ParcelCreator")
 @Entity(tableName = "songs")
@@ -19,7 +21,9 @@ data class Song(  @PrimaryKey @ColumnInfo(name = "id") var songId: Long = 0,
                     @ColumnInfo(name = "uriStr") var uriStr: String = "",
                     @ColumnInfo(name = "imagePathStr") var imagePathStr: String = "",
                     @ColumnInfo(name = "artistId") var artistId: Long = 0,
-                    @ColumnInfo(name = "albumId") var albumId: Long = 0
+                    @ColumnInfo(name = "albumId") var albumId: Long = 0,
+                    @ColumnInfo(name = "playedNumber") var playedNumber: Long = 0,
+                    @ColumnInfo(name = "playedAt")var playedAt: Date? = null
 ) : Parcelable{
 
 
@@ -32,7 +36,8 @@ data class Song(  @PrimaryKey @ColumnInfo(name = "id") var songId: Long = 0,
         uriStr = parcel.readString(),
         imagePathStr = parcel.readString(),
         artistId = parcel.readLong(),
-        albumId =  parcel.readLong()
+        albumId =  parcel.readLong(),
+        playedNumber = parcel.readLong()
     )
 
     override fun writeToParcel(dest: Parcel, flags: Int)  {
@@ -45,6 +50,7 @@ data class Song(  @PrimaryKey @ColumnInfo(name = "id") var songId: Long = 0,
         dest.writeString(imagePathStr)
         dest.writeLong(artistId)
         dest.writeLong(albumId)
+        dest.writeLong(playedNumber)
     }
 
     override fun describeContents() = 0
@@ -63,49 +69,46 @@ data class Song(  @PrimaryKey @ColumnInfo(name = "id") var songId: Long = 0,
          * @return A newly created [Song] instance.
          */
         fun fromContentValues(values: ContentValues): Song {
-            //values?.let {
-                val song = Song()
+            val song = Song()
 
-                if (values.containsKey("id")) {
-                    song.songId = values.getAsLong("id")!!
-                }
-                if (values.containsKey("artistId")) {
-                    song.artistId = values.getAsLong("artistId")!!
-                }
-                if (values.containsKey("albumId")) {
-                    song.albumId = values.getAsLong("albumId")!!
-                }
-                if (values.containsKey("title")) {
-                    song.title = values.getAsString("title")
-                }
-                if (values.containsKey("artistName")) {
-                    song.artistName = values.getAsString("artistName")
-                }
-                if (values.containsKey("albumName")) {
-                    song.albumName = values.getAsString("albumName")
-                }
-                if (values.containsKey("duration")) {
-                    song.duration = values.getAsLong("duration")
-                }
-                if (values.containsKey("uriStr")) {
-                    song.uriStr = values.getAsString("uriStr")
-                }
-                if (values.containsKey("imagePathStr")) {
-                    song.imagePathStr = values.getAsString("imagePathStr")
-                }
+            if (values.containsKey("id")) {
+                song.songId = values.getAsLong("id")!!
+            }
+            if (values.containsKey("artistId")) {
+                song.artistId = values.getAsLong("artistId")!!
+            }
+            if (values.containsKey("albumId")) {
+                song.albumId = values.getAsLong("albumId")!!
+            }
+            if (values.containsKey("title")) {
+                song.title = values.getAsString("title")
+            }
+            if (values.containsKey("artistName")) {
+                song.artistName = values.getAsString("artistName")
+            }
+            if (values.containsKey("albumName")) {
+                song.albumName = values.getAsString("albumName")
+            }
+            if (values.containsKey("duration")) {
+                song.duration = values.getAsLong("duration")
+            }
+            if (values.containsKey("uriStr")) {
+                song.uriStr = values.getAsString("uriStr")
+            }
+            if (values.containsKey("imagePathStr")) {
+                song.imagePathStr = values.getAsString("imagePathStr")
+            }
 
+            song.playedNumber = 0
 
-                return song
-            //}
-            //return null!!
+            val playedAt: Date = Date(System.currentTimeMillis() - TimeUnit.DAYS.toMillis(1))
+            song.playedAt = playedAt
+
+            return song
         }
     }
 
-    public fun getImageUrl(): String?{
-        return imagePathStr
-    }
-    public fun getDurationFormat(): String?{
-
+    fun getDurationFormat(): String?{
         return HHMusicConstants.setCorrectDuration(duration)
     }
 }

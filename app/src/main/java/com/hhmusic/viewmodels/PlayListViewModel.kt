@@ -33,4 +33,12 @@ class PlayListViewModel internal constructor(
     fun addSongToPlayList(songId: Long, playListName: String) : Long {
         return playListRepository.addSongToPlayList(songId, playListName)
     }
+
+    fun getRecentlyPlayedSongs(): LiveData<List<Song>> {
+        return playListRepository.getRecentlyPlayedSong()
+    }
+
+    fun getMostPlayedSongs(): LiveData<List<Song>> {
+        return playListRepository.getMostPlayedSong()
+    }
 }

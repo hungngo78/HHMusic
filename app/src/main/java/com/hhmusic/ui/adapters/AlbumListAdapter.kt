@@ -10,8 +10,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.hhmusic.HHMusicApplication
-import com.hhmusic.R
-import com.hhmusic.data.entities.Album
+import com.hhmusic.data.model.Album
 import com.hhmusic.databinding.AlbumListItemBinding
 import com.hhmusic.ui.activity.MainActivity
 import com.hhmusic.ui.fragment.AlbumDetailFragment

@@ -31,4 +31,8 @@ class SongViewModel internal constructor(
     fun removeSong(songId: Long) : Int {
         return songRepository.removeSong(songId)
     }
+
+    fun updateSong(song: Song) : Int {
+        return songRepository.updateSong(song)
+    }
 }

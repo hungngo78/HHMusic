@@ -19,6 +19,7 @@ import android.R
 import android.view.MenuItem
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import com.hhmusic.ui.activity.PlayerActivity
 import com.hhmusic.ui.fragment.AddPlayListFragment
 import com.hhmusic.ui.fragment.AlbumDetailFragment
 import com.hhmusic.ui.fragment.ArtistDetailFragment
@@ -31,6 +32,9 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.util.*
+import java.util.concurrent.TimeUnit
+import kotlin.collections.ArrayList
 
 
 class SongListAdapter(private val myActivity: MainActivity):
@@ -55,15 +59,11 @@ class SongListAdapter(private val myActivity: MainActivity):
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SongListViewHolder {
-
         return  SongListViewHolder(SongListItemBinding.inflate(LayoutInflater.from(parent.context), parent, false ))
-
     }
 
     override fun onBindViewHolder(holder: SongListAdapter.SongListViewHolder, position: Int) {
-
         val song: Song = getItem(position)
-
 
 //        var uri = Uri.parse("content://media/external/audio/media/" + song.songId + "/albumart")
 //        System.out.println("url = " + song.imagePathStr)
@@ -158,15 +158,14 @@ class SongListAdapter(private val myActivity: MainActivity):
         }
     }
 
-     private fun createOnClickListener(song: Song, position: Int): View.OnClickListener {
+    private fun createOnClickListener(song: Song, position: Int): View.OnClickListener {
         return View.OnClickListener {
             var playerManager = (myActivity.application as HHMusicApplication).getPlayerManager()
             playerManager?.removeMediaSource()
             playerManager?.setSongList(ArrayList(songList), position)
 
-            //val bundle =  MainActivity.getIntent(it.context, ArrayList(songList), song.songId, position)
-            val bundle =  MainActivity.getIntent(it.context, song)
-            myActivity.openPlayerScreen(bundle)
+            val intent =  MainActivity.getIntent(it.context, PlayerActivity.ACTION_PLAY_FROM_SONG_LIST, song)
+            myActivity.openPlayerScreen(intent)
 
             // setup mini music
             myActivity.setupMiniMusic(song)
@@ -175,7 +174,7 @@ class SongListAdapter(private val myActivity: MainActivity):
         }
     }
 
-     class SongListViewHolder(private val binding: SongListItemBinding): RecyclerView.ViewHolder(binding.root) {
+    class SongListViewHolder(private val binding: SongListItemBinding): RecyclerView.ViewHolder(binding.root) {
 
          fun bind(itemOnClickListener: View.OnClickListener,
                   popupMenuBtnOnClickListener: View.OnClickListener,
@@ -194,7 +193,6 @@ class SongListAdapter(private val myActivity: MainActivity):
              }
          }
      }
-
 
     private class SongDiffCallback : DiffUtil.ItemCallback<Song>() {
 

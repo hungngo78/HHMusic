@@ -25,18 +25,11 @@ class SongsFragment(private val myActivity: MainActivity): Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
-        //viewModel = ViewModelProviders.of(this).get(SongViewModel::class.java).apply {
-
-        //}
-
+        binding = FragmentSongListBinding.inflate(inflater,container, false)
         val context = context ?: return binding.root
 
-        //val factory = InjectorUtils.provideSongViewModelFactory(context)
         val factory = InjectorUtils.provideViewModelFactory(context)
         viewModel = ViewModelProviders.of(this, factory).get(SongViewModel::class.java)
-
-        binding = FragmentSongListBinding.inflate(inflater,container, false)
-//        val context = context ?: return binding.root
 
         adapter = SongListAdapter(myActivity)
         binding.songListview.adapter = adapter
@@ -47,7 +40,6 @@ class SongsFragment(private val myActivity: MainActivity): Fragment() {
 
     private fun subscribeUi() {
         viewModel.getObserverSongList().observe(viewLifecycleOwner, Observer {
-
             songs -> if(songs != null) {
                 adapter.submitList(songs)
                 adapter.setSongList(ArrayList(songs))

@@ -17,7 +17,7 @@ import com.hhmusic.ui.adapters.SongListAdapter
 
 
 
-class NowPlayinglistFragment(private val myActivity: PlayerActivity, private val songList: ArrayList<Song>?): DialogFragment() {
+class NowPlayingListFragment(private val myActivity: PlayerActivity, private val songList: ArrayList<Song>?): DialogFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

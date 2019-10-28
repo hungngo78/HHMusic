@@ -2,7 +2,7 @@ package com.hhmusic.data.dao
 
 import androidx.lifecycle.LiveData
 import androidx.room.*
-import com.hhmusic.data.entities.Album
+import com.hhmusic.data.model.Album
 import com.hhmusic.data.entities.Song
 
 @Dao

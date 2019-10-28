@@ -35,6 +35,10 @@ interface SongsDAO {
     @Query("SELECT * FROM songs WHERE id = :songId")
     fun selectSongById(songId: Long): Song
 
+    //@Query("select * from songs where playedNumber in (select distinct playedNumber from songs order by playedNumber desc LIMIT 5)")
+    @Query("select * from songs order by playedNumber desc LIMIT 5")
+    fun getMostPlayedSongs(): LiveData<List<Song>>
 
-
+    @Query("select * from songs order by playedAt desc LIMIT 5")
+    fun getRecentlyPlayedSongs(): LiveData<List<Song>>
 }

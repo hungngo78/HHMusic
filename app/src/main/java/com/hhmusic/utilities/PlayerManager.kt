@@ -2,10 +2,11 @@ package com.hhmusic.utilities
 
 import android.content.Context
 import android.net.Uri
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import com.google.android.exoplayer2.*
 import com.google.android.exoplayer2.audio.AudioAttributes
 import com.google.android.exoplayer2.source.ConcatenatingMediaSource
-import com.google.android.exoplayer2.source.DynamicConcatenatingMediaSource
 import com.google.android.exoplayer2.source.MediaSource
 import com.google.android.exoplayer2.source.ProgressiveMediaSource
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector
@@ -21,14 +22,21 @@ class PlayerManager private constructor(
     private var songList: ArrayList<Song>? = null
     private var mediaSource: MediaSource? = null
 
+    // this is for miniMusic bottom toolbar, and will be obsered by MainActivity
+    private var currentPlayedSong = MutableLiveData<Song>()
+    private var currentPlayedStatus = MutableLiveData<Boolean>()
+
     private var startAutoPlay: Boolean = true
     private var startWindow: Int = C.INDEX_UNSET
     private var startPosition: Long = C.TIME_UNSET
     private var currentIndex : Int =-1
 
     var isPlaying: Boolean = false
-    //get() = field
-    //set(value) {field = value}
+    get() = field
+    set(value) {
+        field = value
+        currentPlayedStatus.value = value
+    }
 
     init {
         initializePlayer()
@@ -46,7 +54,7 @@ class PlayerManager private constructor(
         }
     }
 
-    public fun initializePlayer() {
+    fun initializePlayer() {
         player?:let{
             player = ExoPlayerFactory.newSimpleInstance(
                 context, DefaultRenderersFactory(context)
@@ -70,7 +78,6 @@ class PlayerManager private constructor(
         }
     }
 
-    // no need to expose wrapped ExoPlayer
     fun getPlayer() = player
 
     fun getSongList(): ArrayList<Song>? {
@@ -85,15 +92,26 @@ class PlayerManager private constructor(
                 var uri = Uri.parse(s?.uriStr)
                 uris.add(uri)
             }
-                // build media sources for player
-                val mediaSources = arrayOfNulls<MediaSource>(uris.size)
-                for (i in uris.indices) {
-                    mediaSources[i] = buildMediaSource(uris[i])
-                }
-                mediaSource = if (mediaSources.size == 1) mediaSources[0] else ConcatenatingMediaSource(*mediaSources)
-               // mediaSource = if (mediaSources.size == 1) mediaSources[0] else DynamicConcatenatingMediaSource(*mediaSources)
-        //    }
+
+            // build media sources for player
+            val mediaSources = arrayOfNulls<MediaSource>(uris.size)
+            for (i in uris.indices) {
+                mediaSources[i] = buildMediaSource(uris[i])
+            }
+            mediaSource = if (mediaSources.size == 1) mediaSources[0] else ConcatenatingMediaSource(*mediaSources)
+           // mediaSource = if (mediaSources.size == 1) mediaSources[0] else DynamicConcatenatingMediaSource(*mediaSources)
         }
+    }
+
+    fun setCurrentPlayedSong(song: Song) {
+        currentPlayedSong.value = song
+    }
+    fun getCurrentPlayedSong() : LiveData<Song> {
+        return currentPlayedSong
+    }
+
+    fun getCurrentPlayedStatus() : LiveData<Boolean> {
+        return currentPlayedStatus
     }
 
     fun setPlayerEventListener(_listener: Player.EventListener) {
@@ -103,9 +121,6 @@ class PlayerManager private constructor(
 
     fun play() {
         if (!isPlaying) {
-            //player?.setPlayWhenReady(true);
-            //player?.getPlaybackState();
-
             // seek player to previous position
             val haveStartPosition = startWindow != C.INDEX_UNSET
             if (haveStartPosition) {
@@ -121,10 +136,6 @@ class PlayerManager private constructor(
         }
     }
 
-    fun setCurrentSong(currentSong: Int) {
-        if (currentSong <= songList!!.size && currentSong >=0 )
-            currentIndex = currentSong;
-    }
     fun retry() {
         player?.retry()
         isPlaying = true
@@ -132,9 +143,6 @@ class PlayerManager private constructor(
 
     fun stop() {
         if (isPlaying) {
-            //player?.setPlayWhenReady(false);
-            //player?.getPlaybackState();
-
             updateStartPosition()
             player?.stop(false)
 
@@ -142,11 +150,23 @@ class PlayerManager private constructor(
         }
     }
 
-    fun togglePlayStop() {
-        if (isPlaying)
-            stop()
-        else
-            retry()
+    fun pause() {
+        player?.setPlayWhenReady(false);
+        player?.getPlaybackState();
+
+        isPlaying = false
+    }
+
+    fun resume() {
+        player?.setPlayWhenReady(true);
+        player?.getPlaybackState();
+
+        isPlaying = true
+    }
+
+    fun setCurrentSongIndex(currentSong: Int) {
+        if (currentSong <= songList!!.size && currentSong >=0 )
+            currentIndex = currentSong;
     }
 
     fun updateStartPosition(_startAutoPlay: Boolean, _startWindow: Int, _startPosition: Long) {

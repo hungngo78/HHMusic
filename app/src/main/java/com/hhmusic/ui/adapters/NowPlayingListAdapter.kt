@@ -63,7 +63,7 @@ class NowPlayingListAdapter(private val myActivity: PlayerActivity): ListAdapter
             var playerManager = (myActivity.application as HHMusicApplication).getPlayerManager()
            // playerManager?.setSongList(ArrayList(songList), position)
             if(position != playerManager?.getPlayer()?.currentAdGroupIndex) {
-                playerManager?.setCurrentSong(position)
+                playerManager?.setCurrentSongIndex(position)
                 playerManager?.stop()
                 playerManager?.play()
             }
@@ -75,7 +75,6 @@ class NowPlayingListAdapter(private val myActivity: PlayerActivity): ListAdapter
      class SongListViewHolder(private val binding: SongListItemBinding): RecyclerView.ViewHolder(binding.root) {
 
          fun bind(listener: View.OnClickListener, item: Song, artwork: Bitmap?) {
-       // fun bind(listener: View.OnClickListener, item: Song, artwork: Bitmap?) {
              binding.apply {
                  clickListener = listener
                  songItem = item

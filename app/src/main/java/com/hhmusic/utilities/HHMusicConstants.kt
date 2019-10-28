@@ -4,7 +4,8 @@ import java.lang.reflect.Constructor
 
 object HHMusicConstants {
 
-
+    val MOST_PLAYED_PLAYLIST = "Most played"
+    val RECENTLY_PLAYED_PLAYLIST = "Recently played"
 
 
     public fun setCorrectDuration(songs_duration: Long): String? {
